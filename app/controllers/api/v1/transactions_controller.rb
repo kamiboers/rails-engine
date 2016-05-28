@@ -10,7 +10,7 @@ class Api::V1::TransactionsController < ApplicationController
   end
 
   def random
-    respond_with Transaction.offset(rand(Transaction.count)).first
+    respond_with Transaction.random
   end
 
   # def create

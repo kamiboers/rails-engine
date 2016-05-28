@@ -10,7 +10,7 @@ class Api::V1::CustomersController < ApplicationController
   end
 
   def random
-    respond_with Customer.offset(rand(Customer.count)).first
+    respond_with Customer.random
   end
 
   # def create

@@ -38,6 +38,9 @@ group :development, :test do
   gem 'byebug'
   gem 'launchy'
   gem 'capybara'
+  gem 'simplecov'
+  gem 'vcr'
+  gem 'shoulda-matchers'
 end
 
 group :development do

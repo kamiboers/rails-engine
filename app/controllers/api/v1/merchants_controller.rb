@@ -10,7 +10,7 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def random
-    respond_with Merchant.offset(rand(Merchant.count)).first
+    respond_with Merchant.random
   end
 
   # def create

@@ -10,7 +10,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def random
-    respond_with Item.offset(rand(Item.count)).first
+    respond_with Item.random
   end
 
   # def create

@@ -24,7 +24,7 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
     end
   end
 
-    describe "#random" do
+  describe "#random" do
     it "successfully returns random customer in database" do
       create_customer(8)
       id_array = Customer.pluck(:id)
