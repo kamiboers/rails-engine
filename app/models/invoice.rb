@@ -1,5 +1,5 @@
 class Invoice < ActiveRecord::Base
   belongs_to :merchant
   belongs_to :customer
-  belongs_to :invoice_item
+  has_many :invoice_items
 end

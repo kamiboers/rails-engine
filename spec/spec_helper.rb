@@ -89,4 +89,11 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+
+def create_item(n=1)
+  n.times do
+    Item.create(name: "Item ##{n}", description: "Description ##{n}", unit_price: rand(1.0..500))
+  end
+end
+
 end
