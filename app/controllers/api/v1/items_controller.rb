@@ -9,17 +9,21 @@ class Api::V1::ItemsController < ApplicationController
     respond_with Item.find(params[:id])
   end
 
-  def create
-    respond_with Item.create(item_params), location: nil
+  def random
+    respond_with Item.offset(rand(Item.count)).first
   end
 
-  def update
-    respond_with Item.update(params[:id], item_params), location: nil
-  end
+  # def create
+  #   respond_with Item.create(item_params), location: nil
+  # end
 
-  def destroy
-    respond_with Item.delete(params[:id])
-  end
+  # def update
+  #   respond_with Item.update(params[:id], item_params), location: nil
+  # end
+
+  # def destroy
+  #   respond_with Item.delete(params[:id])
+  # end
 
   private
 

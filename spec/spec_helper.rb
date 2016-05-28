@@ -90,9 +90,39 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 
-def create_item(n=1)
+def create_item(n=1, merchant_id=1)
   n.times do
     Item.create(name: "Item ##{n}", description: "Description ##{n}", unit_price: rand(1.0..500))
+  end
+end
+
+def create_merchant(n=1)
+  n.times do
+    Merchant.create(name: "Merchant ##{n}")
+  end
+end
+
+def create_customer(n=1)
+  n.times do
+    Customer.create(first_name: "Customer ##{n}")
+  end
+end
+
+def create_invoice(n=1)
+  n.times do
+    Invoice.create(status: "shipped")
+  end
+end
+
+def create_transaction(n=1)
+  n.times do
+    Transaction.create(cc_number: rand(1111111111111111..9999999999999999).to_s)
+  end
+end
+
+def create_invoice_item(n=1)
+  n.times do
+    InvoiceItem.create(unit_price: rand(123.45..543.21))
   end
 end
 

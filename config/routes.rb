@@ -1,10 +1,25 @@
 Rails.application.routes.draw do
+  databases = ["items", "merchants", "customers", "invoices", "transactions", "invoice_items"]
   
   namespace :api do
     namespace :v1 do
-      resources :items, except: [:new, :edit]
+      resources :items, only: [:index, :show]
+      resources :merchants, only: [:index, :show]
+      resources :customers, only: [:index, :show]
+      resources :invoices, only: [:index, :show]
+      resources :invoice_items, only: [:index, :show]
+      resources :transactions, only: [:index, :show]
+
+      databases.each do |database|
+        get "#{database}/random", to: "#{database}#random", as: "random_#{database}"
+      end
+
     end
   end
+
+end
+
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -60,4 +75,3 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-end
