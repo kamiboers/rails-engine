@@ -63,6 +63,54 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
   # end
 end
 
+  describe "#find_all" do
+    it "returns all invoices with status in search parameters, case insensitive" do
+      create_invoice(1, "shipped")
+      create_invoice(2, "pending")
+      
+      get :find_all, status: "PENDING"
+      selected = JSON.parse(response.body)["invoices"]
+      first_selected_status = selected.first["status"]
+      last_selected_status = selected.last["status"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_status).to eq("pending")
+      expect(last_selected_status).to eq("pending")
+    end
+
+    it "returns all invoices with customer_id in search parameters, case insensitive" do
+      create_invoice(1, 5.00, 5)
+      create_invoice(2, 5.00, 6)
+      
+      get :find_all, customer_id: 6
+      selected = JSON.parse(response.body)["invoices"]
+      first_selected_customer_id = selected.first["customer_id"]
+      last_selected_customer_id = selected.last["customer_id"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_customer_id).to eq(6)
+      expect(last_selected_customer_id).to eq(6)
+    end
+
+    it "returns all invoices with merchant_id in search parameters, case insensitive" do
+      create_invoice(1, 5.00, 5, 8)
+      create_invoice(2, 5.00, 5, 27)
+      
+      get :find_all, merchant_id: 27
+      selected = JSON.parse(response.body)["invoices"]
+      first_selected_merchant_id = selected.first["merchant_id"]
+      last_selected_merchant_id = selected.last["merchant_id"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_merchant_id).to eq(27)
+      expect(last_selected_merchant_id).to eq(27)
+    end
+
+end
+
   # describe "#create" do
   #   it "successfully creates an invoice" do
   #     assert_equal 0, Invoice.count

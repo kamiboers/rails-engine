@@ -16,7 +16,12 @@ class Api::V1::MerchantsController < ApplicationController
   def find
     render :json => {merchant: Merchant.search(params)}
   end
-  
+
+  def find_all
+    render :json => {merchants: Merchant.search_all(params)}
+  end
+ 
+
   # def create
   #   respond_with Merchant.create(item_params), location: nil
   # end

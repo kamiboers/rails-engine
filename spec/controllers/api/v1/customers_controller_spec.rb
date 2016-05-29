@@ -61,6 +61,36 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
   end
 end
 
+  describe "#find_all" do
+    it "returns all customers with first_name in search parameters" do
+      create_customer(1, "John", "McJohn")
+      create_customer(2, "Steve", "McSteve")
+      
+      get :find_all, first_name: "Steve"
+      selected = JSON.parse(response.body)["customers"]
+
+      first_selected_name = selected.first["first_name"]
+      last_selected_name = selected.last["first_name"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_name).to eq("Steve")
+      expect(last_selected_name).to eq("Steve")
+    end
+
+    it "returns all customers with name in search parameters regardless of case" do
+      create_customer(1, "Steve")
+      create_customer(1, "sTEVe")
+      create_customer(1, "Blue")
+
+      get :find_all, first_name: "steve"
+      selected = JSON.parse(response.body)["customers"]
+      
+      assert_response :success
+      expect(selected.count).to eq(2)
+  end
+end
+
   # describe "#create" do
   #   it "successfully creates an customer" do
   #     assert_equal 0, Customer.count

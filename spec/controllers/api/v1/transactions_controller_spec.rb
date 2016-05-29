@@ -62,6 +62,58 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
   end
 end
 
+  describe "#find_all" do
+    it "returns all transactions with cc_number in search parameters" do
+      create_transaction(1, "4242424242424242")
+      create_transaction(2, "1212121212121212")
+      
+      get :find_all, cc_number: "1212121212121212"
+      selected = JSON.parse(response.body)["transactions"]
+
+      first_selected_cc = selected.first["cc_number"]
+      last_selected_cc = selected.last["cc_number"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_cc).to eq("1212121212121212")
+      expect(last_selected_cc).to eq("1212121212121212")
+    end
+
+    it "returns all transactions with result in search parameters" do
+      create_transaction(1, "4242424242424242", "paid")
+      create_transaction(2, "4242424242424242", "cancelled")
+      
+      get :find_all, result: "cancelled"
+      selected = JSON.parse(response.body)["transactions"]
+
+      first_selected_result = selected.first["result"]
+      last_selected_result = selected.last["result"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_result).to eq("cancelled")
+      expect(last_selected_result).to eq("cancelled")
+    end
+
+    it "returns all transactions with invoice_id in search parameters" do
+      create_transaction(1, "4242424242424242", "paid", 5)
+      create_transaction(2, "4242424242424242", "paid", 6)
+      
+      get :find_all, invoice_id: 6
+      selected = JSON.parse(response.body)["transactions"]
+
+      first_selected_invoice_id = selected.first["invoice_id"]
+      last_selected_invoice_id = selected.last["invoice_id"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_invoice_id).to eq(6)
+      expect(last_selected_invoice_id).to eq(6)
+    end
+
+    
+end
+
 # describe "#create" do
 #   it "successfully creates an transaction" do
 #     assert_equal 0, Transaction.count

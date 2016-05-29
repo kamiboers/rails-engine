@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       databases.each do |database|
         get "#{database}/random", to: "#{database}#random", as: "random_#{database}"
         get "#{database}/find", to: "#{database}#find", as: "find_#{database}"
+        get "#{database}/find_all", to: "#{database}#find_all", as: "find_all_#{database}"
       end
 
       resources :items, only: [:index, :show]

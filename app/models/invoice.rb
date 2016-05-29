@@ -17,5 +17,11 @@ class Invoice < ActiveRecord::Base
     return find(params[:merchant_id]).as_json if params[:merchant_id]
   end
 
+   def self.search_all(params)
+    return find(params[:id]).as_json if params[:id]
+    return where("lower(status) = ?", params[:status].downcase).as_json if params[:status]
+    return where(customer_id: params[:customer_id]).as_json if params[:customer_id]
+    return where(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
+  end
 
 end

@@ -17,6 +17,10 @@ class Api::V1::ItemsController < ApplicationController
     render :json => {item: Item.search(params)}
   end
 
+  def find_all
+    render :json => {items: Item.search_all(params)}
+  end
+
   # def create
   #   respond_with Item.create(item_params), location: nil
   # end

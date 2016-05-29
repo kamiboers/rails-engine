@@ -92,39 +92,39 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 
-def create_item(n=1, merchant_id=1)
+def create_item(n=1, merchant_id=1, name="Item", description="Description", unit_price=rand(1.0..500))
   n.times do
-    Item.create(name: "Item ##{n}", description: "Description ##{n}", unit_price: rand(1.0..500), merchant_id: merchant_id)
+    Item.create(name: name, description: description, unit_price: unit_price, merchant_id: merchant_id)
   end
 end
 
-def create_merchant(n=1)
-  (1..n).to_a.each do |x|
-    Merchant.create(name: "Merchant ##{x}")
+def create_merchant(n=1, name="Merchant")
+  n.times do
+    Merchant.create(name: name)
   end
 end
 
-def create_customer(n=1)
+def create_customer(n=1, first_name="Customer", last_name="Smith")
   n.times do
-    Customer.create(first_name: "Customer ##{n}", last_name: "Smith")
+    Customer.create(first_name: first_name, last_name: last_name)
   end
 end
 
-def create_invoice(n=1)
+def create_invoice(n=1, status="shipped", customer_id=1, merchant_id=1)
   n.times do
-    Invoice.create(status: "shipped", customer_id: 1, merchant_id: 1)
+    Invoice.create(status: status, customer_id: customer_id, merchant_id: merchant_id)
   end
 end
 
-def create_transaction(n=1)
+def create_transaction(n=1, cc_number=rand(1111111111111111..9999999999999999).to_s, result="resultat", invoice_id=1)
   n.times do
-    Transaction.create(cc_number: rand(1111111111111111..9999999999999999).to_s, result: "resultat", invoice_id: 1)
+    Transaction.create(cc_number: cc_number, result: result, invoice_id: invoice_id)
   end
 end
 
-def create_invoice_item(n=1)
+def create_invoice_item(n=1, unit_price=rand(123.45..543.21), quantity=rand(1..18), item_id=1, invoice_id=1)
   n.times do
-    InvoiceItem.create(unit_price: rand(123.45..543.21), quantity: rand(1..18), item_id: 1, invoice_id: 1)
+    InvoiceItem.create(unit_price: unit_price, quantity: quantity, item_id: item_id, invoice_id: invoice_id)
   end
 end
 

@@ -17,6 +17,10 @@ class Api::V1::CustomersController < ApplicationController
     render :json => {customer: Customer.search(params)}
   end
 
+  def find_all
+    render :json => {customers: Customer.search_all(params)}
+  end
+
   # def create
   #   respond_with Customer.create(item_params), location: nil
   # end

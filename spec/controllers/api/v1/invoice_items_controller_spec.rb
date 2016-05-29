@@ -63,6 +63,36 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
   end
 end
 
+  describe "#find_all" do
+    it "returns all invoice_items with unit_price in search parameters" do
+      create_invoice_item(1, 12.50)
+      create_invoice_item(2, 12.75)
+      
+      get :find_all, unit_price: 12.75
+      selected = JSON.parse(response.body)["invoice_items"]
+
+      first_selected_price = selected.first["unit_price"]
+      last_selected_price = selected.last["unit_price"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_price).to eq("12.75")
+      expect(last_selected_price).to eq("12.75")
+    end
+
+    it "returns all invoice_items with quantity in search parameters regardless of case" do
+      create_invoice_item(1, 12.50, 3)
+      create_invoice_item(2, 12.75, 16)
+
+      get :find_all, quantity: 16
+      selected = JSON.parse(response.body)["invoice_items"]
+      
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(selected.first["quantity"]).to eq(16)
+      expect(selected.last["quantity"]).to eq(16)
+  end
+end
   # describe "#create" do
   #   it "successfully creates an invoice_item" do
   #     assert_equal 0, InvoiceItem.count

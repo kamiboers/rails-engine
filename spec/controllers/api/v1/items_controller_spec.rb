@@ -60,6 +60,108 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
       assert_response :success
       expect(response.body).to include(item.id.to_s)
   end
+
+  it "returns item with description substring in search parameters" do
+      create_item
+      create_item(1, 1, "Described Item", "This item description like totes says stuff and things.")
+      item = Item.last
+
+      get :find, description: "totes"
+      selected = JSON.parse(response.body)["item"]
+
+      assert_response :success
+      expect(selected["id"]).to eq(item.id)
+      expect(selected["description"]).to include("totes")
+  end 
+
+  it "returns item with unit_price in search parameters" do
+      create_item
+      create_item(1, 1, "Priced Item", "Description", 4321.12)
+      item = Item.last
+
+      get :find, unit_price: 4321.12
+      selected = JSON.parse(response.body)["item"]
+
+      assert_response :success
+      expect(selected["id"]).to eq(item.id)
+      expect(selected["name"]).to eq("Priced Item")
+  end
+
+  it "returns item with merchant_id in search parameters" do
+      create_item
+      create_item(1, 87, "Merchant's Item", "Description", 100.00)
+      item = Item.last
+
+      get :find, merchant_id: 87
+      selected = JSON.parse(response.body)["item"]
+
+      assert_response :success
+      expect(selected["id"]).to eq(item.id)
+      expect(selected["name"]).to eq("Merchant's Item")
+  end
+end
+
+describe "#find_all" do
+    it "returns all items with unit_price in search parameters" do
+      create_item(1, 1, "name", "description", 121.50)
+      create_item(2, 1, "name", "description", 122.75)
+      
+      get :find_all, unit_price: 122.75
+      selected = JSON.parse(response.body)["items"]
+
+      first_selected_price = selected.first["unit_price"]
+      last_selected_price = selected.last["unit_price"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_price).to eq("122.75")
+      expect(last_selected_price).to eq("122.75")
+    end
+
+    it "returns all items with name in search parameters" do
+      create_item(1, 1, "name", "description", 122.75)
+      create_item(2, 1, "Smelloscope", "description", 122.75)
+      
+      get :find_all, name: "SmellOSCOPe"
+      selected = JSON.parse(response.body)["items"]
+
+      first_selected_name = selected.first["name"]
+      last_selected_name = selected.last["name"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_name).to eq("Smelloscope")
+      expect(last_selected_name).to eq("Smelloscope")
+    end
+
+    it "returns all items containing description substring in search parameters" do
+      create_item(1, 1, "name", "description", 10)
+      create_item(2, 1, "name", "other description", 10)
+      
+      get :find_all, description: "description"
+      selected = JSON.parse(response.body)["items"]
+      first_selected_description = selected.first["description"]
+      last_selected_description = selected.last["description"]
+
+      assert_response :success
+      expect(selected.count).to eq(3)
+    end
+
+    it "returns all items containing merchant_id in search parameters" do
+      create_item(1, 11, "name", "description", 10)
+      create_item(2, 99, "name", "other description", 10)
+      
+      get :find_all, merchant_id: 99
+      selected = JSON.parse(response.body)["items"]
+      first_selected_merchant_id = selected.first["merchant_id"]
+      last_selected_merchant_id = selected.last["merchant_id"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_merchant_id).to eq(99)
+      expect(last_selected_merchant_id).to eq(99)
+    end
+
 end
 
   # describe "#create" do

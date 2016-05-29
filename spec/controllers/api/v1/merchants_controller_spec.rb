@@ -53,11 +53,42 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
 
     it "returns merchant with name in search parameters" do
       create_merchant
-      merchant = Merchant.first
-      get :find, name: merchant.name
+      create_merchant(1, "Nick")
+      merchant = Merchant.last
+      get :find, name: "Nick"
 
       assert_response :success
       expect(response.body).to include(merchant.id.to_s)
+  end
+end
+
+  describe "#find_all" do
+    it "returns all merchants with name in search parameters" do
+      create_merchant(1, "John McJohn")
+      create_merchant(2, "Steve McSteve")
+      
+      get :find_all, name: "Steve McSteve"
+      selected = JSON.parse(response.body)["merchants"]
+
+      first_selected_name = selected.first["name"]
+      last_selected_name = selected.last["name"]
+
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_name).to eq("Steve McSteve")
+      expect(last_selected_name).to eq("Steve McSteve")
+    end
+
+    it "returns all merchants with name in search parameters regardless of case" do
+      create_merchant(1, "Steve")
+      create_merchant(1, "sTEVe")
+      create_merchant(1, "Blue")
+
+      get :find_all, name: "steve"
+      selected = JSON.parse(response.body)["merchants"]
+      
+      assert_response :success
+      expect(selected.count).to eq(2)
   end
 end
 
