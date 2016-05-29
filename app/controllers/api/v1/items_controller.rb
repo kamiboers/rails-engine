@@ -13,6 +13,10 @@ class Api::V1::ItemsController < ApplicationController
     respond_with Item.random
   end
 
+  def find
+    render :json => {item: Item.search(params)}
+  end
+
   # def create
   #   respond_with Item.create(item_params), location: nil
   # end
@@ -25,10 +29,10 @@ class Api::V1::ItemsController < ApplicationController
   #   respond_with Item.delete(params[:id])
   # end
 
-  private
+  # private
 
-  def item_params
-    params.require(:item).permit(:id, :name, :description, :unit_price, :merchant_id, :created_at, :updated_at)
-  end
+  # def item_params
+  #   params.require(:item).permit(:id, :name, :description, :unit_price, :merchant_id, :created_at, :updated_at)
+  # end
 
 end

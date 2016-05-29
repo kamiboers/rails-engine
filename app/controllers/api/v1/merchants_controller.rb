@@ -13,6 +13,10 @@ class Api::V1::MerchantsController < ApplicationController
     respond_with Merchant.random
   end
 
+  def find
+    render :json => {merchant: Merchant.search(params)}
+  end
+  
   # def create
   #   respond_with Merchant.create(item_params), location: nil
   # end
@@ -25,10 +29,10 @@ class Api::V1::MerchantsController < ApplicationController
   #   respond_with Merchant.delete(params[:id])
   # end
 
-  private
+  # private
 
-  def item_params
-    params.require(:merchant).permit(:id, :name, :created_at, :updated_at)
-  end
+  # def item_params
+  #   params.require(:merchant).permit(:id, :name, :created_at, :updated_at)
+  # end
 
 end

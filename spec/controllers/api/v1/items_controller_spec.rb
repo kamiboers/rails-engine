@@ -39,6 +39,29 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
     end
   end
 
+  describe "#find" do
+    it "returns item with id in search parameters" do
+      create_item
+      item = Item.first
+      
+      get :find, id: item.id
+
+      assert_response :success
+      expect(response.body).to include(item.name)
+      expect(response.body).to include(item.description)
+    end
+
+    it "returns item with name in search parameters" do
+      create_item
+      item = Item.first
+
+      get :find, name: item.name
+
+      assert_response :success
+      expect(response.body).to include(item.id.to_s)
+  end
+end
+
   # describe "#create" do
   #   it "successfully creates an item" do
   #     assert_equal 0, Item.count

@@ -39,6 +39,30 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
     end
   end
 
+   describe "#find" do
+    it "returns invoice with id in search parameters" do
+      create_invoice
+      invoice = Invoice.first
+      
+      get :find, id: invoice.id
+
+      assert_response :success
+      expect(response.body).to include(invoice.status)
+      expect(response.body).to include(invoice.customer_id.to_s)
+      expect(response.body).to include(invoice.merchant_id.to_s)
+    end
+
+  #   it "returns invoice with cc_number in search parameters" do
+  #     create_invoice
+  #     invoice = Invoice.first
+
+  #     get :find, invoice_id: invoice.invoice_id
+
+  #     assert_response :success
+  #     expect(response.body).to include(invoice.id.to_s)
+  # end
+end
+
   # describe "#create" do
   #   it "successfully creates an invoice" do
   #     assert_equal 0, Invoice.count

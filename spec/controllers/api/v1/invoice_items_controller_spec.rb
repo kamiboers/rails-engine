@@ -38,6 +38,31 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
       expect(invoice_item1_id).not_to eq(invoice_item2_id)
     end
   end
+
+
+   describe "#find" do
+    it "returns invoice_item with id in search parameters" do
+      create_invoice_item
+      invoice_item = InvoiceItem.first
+      
+      get :find, id: invoice_item.id
+
+      assert_response :success
+      expect(response.body).to include(invoice_item.quantity.to_s)
+      expect(response.body).to include(invoice_item.unit_price.to_s)
+    end
+
+    it "returns invoice_item with cc_number in search parameters" do
+      create_invoice_item
+      invoice_item = InvoiceItem.first
+
+      get :find, invoice_id: invoice_item.invoice_id
+
+      assert_response :success
+      expect(response.body).to include(invoice_item.id.to_s)
+  end
+end
+
   # describe "#create" do
   #   it "successfully creates an invoice_item" do
   #     assert_equal 0, InvoiceItem.count

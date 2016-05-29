@@ -10,4 +10,9 @@ class Invoice < ActiveRecord::Base
     offset(rand(Invoice.count)).first
   end
 
+  def self.search(params)
+    return find(params[:id]).as_json if params[:id]
+  end
+
+
 end

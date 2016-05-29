@@ -99,8 +99,8 @@ def create_item(n=1, merchant_id=1)
 end
 
 def create_merchant(n=1)
-  n.times do
-    Merchant.create(name: "Merchant ##{n}")
+  (1..n).to_a.each do |x|
+    Merchant.create(name: "Merchant ##{x}")
   end
 end
 

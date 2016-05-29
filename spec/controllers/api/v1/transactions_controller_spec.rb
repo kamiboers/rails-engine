@@ -39,6 +39,29 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
     end
   end
 
+   describe "#find" do
+    it "returns transaction with id in search parameters" do
+      create_transaction
+      transaction = Transaction.first
+      
+      get :find, id: transaction.id
+
+      assert_response :success
+      expect(response.body).to include(transaction.cc_number)
+      expect(response.body).to include(transaction.result)
+    end
+
+    it "returns transaction with cc_number in search parameters" do
+      create_transaction
+      transaction = Transaction.first
+
+      get :find, invoice_id: transaction.invoice_id
+
+      assert_response :success
+      expect(response.body).to include(transaction.id.to_s)
+  end
+end
+
 # describe "#create" do
 #   it "successfully creates an transaction" do
 #     assert_equal 0, Transaction.count

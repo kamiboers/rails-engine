@@ -13,6 +13,10 @@ class Api::V1::InvoiceItemsController < ApplicationController
     respond_with InvoiceItem.random
   end
 
+  def find
+    render :json => {invoice_item: InvoiceItem.search(params)}
+  end
+
   # def create
   #   respond_with InvoiceItem.create(item_params), location: nil
   # end
@@ -25,10 +29,10 @@ class Api::V1::InvoiceItemsController < ApplicationController
   #   respond_with InvoiceItem.delete(params[:id])
   # end
 
-  private
+  # private
 
-  def item_params
-    params.require(:invoice_item).permit(:id, :item_id, :invoice_id, :quantity, :unit_price, :created_at, :updated_at)
-  end
+  # def item_params
+  #   params.require(:invoice_item).permit(:id, :item_id, :invoice_id, :quantity, :unit_price, :created_at, :updated_at)
+  # end
 
 end

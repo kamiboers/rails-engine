@@ -39,8 +39,27 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
     end
   end
 
+  describe "#find" do
+    it "returns merchant with id in search parameters" do
+      create_merchant
+      merchant = Merchant.first
+      
+      
+      get :find, id: merchant.id
 
+      assert_response :success
+      expect(response.body).to include(merchant.name)
+    end
 
+    it "returns merchant with name in search parameters" do
+      create_merchant
+      merchant = Merchant.first
+      get :find, name: merchant.name
+
+      assert_response :success
+      expect(response.body).to include(merchant.id.to_s)
+  end
+end
 
   # describe "#create" do
   #   it "successfully creates an merchant" do

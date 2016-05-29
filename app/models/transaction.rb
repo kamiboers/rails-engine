@@ -8,4 +8,9 @@ class Transaction < ActiveRecord::Base
     offset(rand(Transaction.count)).first
   end
 
+  def self.search(params)
+    return find(params[:id]).as_json if params[:id]
+    return find_by(invoice_id: params[:invoice_id]).as_json if params[:invoice_id]
+  end
+
 end

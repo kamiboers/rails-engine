@@ -39,6 +39,29 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
     end
   end
 
+  describe "#find" do
+    it "returns customer with id in search parameters" do
+      create_customer
+      customer = Customer.first
+      
+      get :find, id: customer.id
+
+      assert_response :success
+      expect(response.body).to include(customer.first_name)
+      expect(response.body).to include(customer.last_name)
+    end
+
+    it "returns customer with name in search parameters" do
+      create_customer
+      customer = Customer.first
+
+      get :find, first_name: customer.first_name
+
+      assert_response :success
+      expect(response.body).to include(customer.id.to_s)
+  end
+end
+
   # describe "#create" do
   #   it "successfully creates an customer" do
   #     assert_equal 0, Customer.count

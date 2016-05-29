@@ -13,6 +13,10 @@ class Api::V1::TransactionsController < ApplicationController
     respond_with Transaction.random
   end
 
+  def find
+    render :json => {transaction: Transaction.search(params)}
+  end
+
   # def create
   #   respond_with Transaction.create(item_params), location: nil
   # end
@@ -25,10 +29,10 @@ class Api::V1::TransactionsController < ApplicationController
   #   respond_with Transaction.delete(params[:id])
   # end
 
-  private
+  # private
 
-  def item_params
-    params.require(:transaction).permit(:id, :invoice_id, :cc_number, :expiration, :result, :created_at, :updated_at)
-  end
+  # def item_params
+  #   params.require(:transaction).permit(:id, :invoice_id, :cc_number, :expiration, :result, :created_at, :updated_at)
+  # end
 
 end
