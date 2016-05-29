@@ -10,6 +10,8 @@ class Transaction < ActiveRecord::Base
 
   def self.search(params)
     return find(params[:id]).as_json if params[:id]
+    return find_by(cc_number: params[:cc_number]).as_json if params[:cc_number]
+    return where("lower(result) = ?", params[:result].downcase).first.as_json if params[:result]
     return find_by(invoice_id: params[:invoice_id]).as_json if params[:invoice_id]
   end
 

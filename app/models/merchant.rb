@@ -9,7 +9,7 @@ class Merchant < ActiveRecord::Base
 
   def self.search(params)
     return self.find(params[:id]).as_json if params[:id]
-    return self.find_by(name: params[:name]).as_json if params[:name]
+    return where("lower(name) = ?", params[:name].downcase).first.as_json if params[:name]
   end
 
 

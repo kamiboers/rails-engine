@@ -13,6 +13,9 @@ class InvoiceItem < ActiveRecord::Base
 
   def self.search(params)
     return find(params[:id]).as_json if params[:id]
+    return find_by(quantity: params[:quantity]).as_json if params[:quantity]
+    return find_by(unit_price: params[:unit_price]).as_json if params[:unit_price]
+    return find_by(item_id: params[:item_id]).as_json if params[:item_id]
     return find_by(invoice_id: params[:invoice_id]).as_json if params[:invoice_id]
   end
 

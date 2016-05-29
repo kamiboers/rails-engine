@@ -8,9 +8,9 @@ class Customer < ActiveRecord::Base
   end
 
   def self.search(params)
-    return self.find(params[:id]).as_json if params[:id]
-    return self.find_by(first_name: params[:first_name]).as_json if params[:first_name]
-    return self.find_by(last_name: params[:last_name]).as_json if params[:last_name]
+    return find(params[:id]).as_json if params[:id]
+    return where("lower(first_name) = ?", params[:first_name].downcase).first.as_json if params[:first_name]
+    return where("lower(last_name) = ?", params[:last_name].downcase).first.as_json if params[:last_name]
   end
 
 end

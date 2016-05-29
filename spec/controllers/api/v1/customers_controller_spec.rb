@@ -56,7 +56,6 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
       customer = Customer.first
 
       get :find, first_name: customer.first_name
-
       assert_response :success
       expect(response.body).to include(customer.id.to_s)
   end
