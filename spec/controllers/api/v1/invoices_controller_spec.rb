@@ -52,15 +52,38 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       expect(response.body).to include(invoice.merchant_id.to_s)
     end
 
-  #   it "returns invoice with cc_number in search parameters" do
-  #     create_invoice
-  #     invoice = Invoice.first
+    it "returns invoice with status in search parameters" do
+      create_invoice(1, "paid")
+      create_invoice(1, "pending")
+      invoice = Invoice.last
 
-  #     get :find, invoice_id: invoice.invoice_id
+      get :find, status: "pending"
 
-  #     assert_response :success
-  #     expect(response.body).to include(invoice.id.to_s)
-  # end
+      assert_response :success
+      expect(response.body).to include(invoice.id.to_s)
+  end
+
+    it "returns invoice with customer_id in search parameters" do
+      create_invoice(1, "paid", 1)
+      create_invoice(1, "pending", 22)
+      invoice = Invoice.last
+
+      get :find, customer_id: 22
+
+      assert_response :success
+      expect(response.body).to include(invoice.id.to_s)
+  end
+
+    it "returns invoice with merchant_id in search parameters" do
+      create_invoice(1, "paid", 1, 1)
+      create_invoice(1, "pending", 1, 66)
+      invoice = Invoice.last
+
+      get :find, merchant_id: 66
+
+      assert_response :success
+      expect(response.body).to include(invoice.id.to_s)
+  end
 end
 
   describe "#find_all" do

@@ -51,11 +51,20 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
       expect(response.body).to include(customer.last_name)
     end
 
-    it "returns customer with name in search parameters" do
+    it "returns customer with first_name in search parameters" do
       create_customer
       customer = Customer.first
 
       get :find, first_name: customer.first_name
+      assert_response :success
+      expect(response.body).to include(customer.id.to_s)
+  end
+
+    it "returns customer with last_name in search parameters" do
+      create_customer
+      customer = Customer.first
+
+      get :find, last_name: customer.last_name
       assert_response :success
       expect(response.body).to include(customer.id.to_s)
   end
@@ -78,16 +87,38 @@ end
       expect(last_selected_name).to eq("Steve")
     end
 
-    it "returns all customers with name in search parameters regardless of case" do
+    it "returns all customers with first_name in search parameters regardless of case" do
       create_customer(1, "Steve")
       create_customer(1, "sTEVe")
       create_customer(1, "Blue")
 
       get :find_all, first_name: "steve"
       selected = JSON.parse(response.body)["customers"]
+
+      first_selected_name = selected.first["first_name"]
+      last_selected_name = selected.last["first_name"]
       
       assert_response :success
       expect(selected.count).to eq(2)
+      expect(first_selected_name).to eq("Steve")
+      expect(last_selected_name).to eq("sTEVe")
+  end
+
+    it "returns all customers with last_name in search parameters regardless of case" do
+      create_customer(1, "Steve", "Marshall")
+      create_customer(1, "John", "marSHALl")
+      create_customer(1, "Steve", "Marks")
+
+      get :find_all, last_name: "marshall"
+      selected = JSON.parse(response.body)["customers"]
+
+      first_selected_name = selected.first["last_name"]
+      last_selected_name = selected.last["last_name"]
+      
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(first_selected_name).to eq("Marshall")
+      expect(last_selected_name).to eq("marSHALl")
   end
 end
 

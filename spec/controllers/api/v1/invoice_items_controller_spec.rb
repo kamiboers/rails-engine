@@ -82,7 +82,7 @@ end
 
     it "returns all invoice_items with quantity in search parameters regardless of case" do
       create_invoice_item(1, 12.50, 3)
-      create_invoice_item(2, 12.75, 16)
+      create_invoice_item(2, 12.50, 16)
 
       get :find_all, quantity: 16
       selected = JSON.parse(response.body)["invoice_items"]
@@ -91,6 +91,32 @@ end
       expect(selected.count).to eq(2)
       expect(selected.first["quantity"]).to eq(16)
       expect(selected.last["quantity"]).to eq(16)
+  end
+
+    it "returns all invoice_items with item_id in search parameters regardless of case" do
+      create_invoice_item(1, 12.50, 3, 5)
+      create_invoice_item(2, 12.50, 3, 17)
+
+      get :find_all, item_id: 17
+      selected = JSON.parse(response.body)["invoice_items"]
+      
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(selected.first["item_id"]).to eq(17)
+      expect(selected.last["item_id"]).to eq(17)
+  end
+
+    it "returns all invoice_items with invoice_id in search parameters regardless of case" do
+      create_invoice_item(1, 12.50, 3, 5, 8)
+      create_invoice_item(2, 12.50, 3, 5, 99)
+
+      get :find_all, invoice_id: 99
+      selected = JSON.parse(response.body)["invoice_items"]
+      
+      assert_response :success
+      expect(selected.count).to eq(2)
+      expect(selected.first["invoice_id"]).to eq(99)
+      expect(selected.last["invoice_id"]).to eq(99)
   end
 end
   # describe "#create" do
