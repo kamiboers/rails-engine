@@ -2,6 +2,8 @@ class Invoice < ActiveRecord::Base
   belongs_to :merchant
   belongs_to :customer
   has_many :invoice_items
+  has_many :items, through: :invoice_items
+  has_many :transactions
   validates :status, presence: true
   validates :customer_id, presence: true
   validates :merchant_id, presence: true
@@ -22,6 +24,26 @@ class Invoice < ActiveRecord::Base
     return where("lower(status) = ?", params[:status].downcase).as_json if params[:status]
     return where(customer_id: params[:customer_id]).as_json if params[:customer_id]
     return where(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
+  end
+
+  def return_transactions
+    transactions.as_json
+  end
+
+  def return_invoice_items
+    invoice_items.as_json
+  end
+
+  def return_items
+    items.as_json
+  end
+
+  def return_merchant
+    merchant.as_json
+  end
+
+  def return_customer
+    customer.as_json
   end
 
 end
