@@ -110,9 +110,22 @@ end
       expect(first_selected_invoice_id).to eq(6)
       expect(last_selected_invoice_id).to eq(6)
     end
-
-    
 end
+
+  describe "#invoice" do
+    it "successfully returns transaction's invoice data" do
+      create_invoice(1, "transaction invoice")
+      invoice = Invoice.last
+      create_transaction(1, "cc_number", "result", invoice.id)
+      transaction = Transaction.last
+
+      get :invoice, id: transaction.id
+      transaction_invoice = JSON.parse(response.body)["invoice"]
+
+      assert_response :success
+      expect(transaction_invoice.to_s).to include("transaction invoice")
+    end
+  end
 
 # describe "#create" do
 #   it "successfully creates an transaction" do

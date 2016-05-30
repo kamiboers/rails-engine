@@ -20,6 +20,11 @@ class Api::V1::TransactionsController < ApplicationController
   def find_all
     render :json => {transactions: Transaction.search_all(params)}
   end
+
+  def invoice
+    transaction = Transaction.find(params[:id])
+    render :json => {transaction: transaction, invoice: transaction.invoice}
+  end
  
   # def create
   #   respond_with Transaction.create(item_params), location: nil
