@@ -163,9 +163,6 @@ describe "#find_all" do
     end
 end
 
-(n=1, unit_price=rand(123.45..543.21), quantity=rand(1..18), item_id=1, invoice_id=1)
-
-
  describe "#invoice_items" do
     it "successfully returns specific item invoice_item data" do
       create_item

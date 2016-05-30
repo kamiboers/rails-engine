@@ -21,5 +21,4 @@ class Transaction < ActiveRecord::Base
     return where(cc_number: params[:cc_number]).as_json if params[:cc_number]
     return where(invoice_id: params[:invoice_id]).as_json if params[:invoice_id]
   end
-
 end

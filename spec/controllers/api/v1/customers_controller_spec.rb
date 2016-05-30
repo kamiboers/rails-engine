@@ -139,7 +139,6 @@ describe "#invoices" do
       expect(customer_invoices.last["id"]).to eq(invoice.id)
     end
   end
-(n=1, cc_number=rand(1111111111111111..9999999999999999).to_s, result="resultat", invoice_id=1)
 
 describe "#transactions" do
     it "successfully returns specific customer transaction data" do
@@ -147,8 +146,8 @@ describe "#transactions" do
       customer = Customer.last
       create_invoice(1, "paid", customer.id)
       invoice = Invoice.last
-      create_transaction(1, "cc_number", "other transaction result", invoice.id)
       create_transaction(1, "cc_number", "transaction result", invoice.id)
+      create_transaction(1, "cc_number", "other result", invoice.id)
       transaction = Transaction.last
       
       get :transactions, id: customer.id
@@ -157,7 +156,7 @@ describe "#transactions" do
       assert_response :success
       expect(customer_transactions.count).to eq(2)
       expect(customer_transactions.to_s).to include("transaction result")
-      expect(customer_transactions.to_s).to include("other transaction result")
+      expect(customer_transactions.to_s).to include("other result")
     end
   end
 

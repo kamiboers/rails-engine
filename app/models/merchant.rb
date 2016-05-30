@@ -1,6 +1,8 @@
 class Merchant < ActiveRecord::Base
   has_many :items
   has_many :invoices
+  has_many :transactions, through: :invoices
+
   validates :name, presence: true
 
   def self.random
@@ -15,6 +17,10 @@ class Merchant < ActiveRecord::Base
   def self.search_all(params)
     return find(params[:id]).as_json if params[:id]
     return where("lower(name) = ?", params[:name].downcase).as_json if params[:name]
+  end
+
+  def successful_transactions
+    transactions.where(result: "success")
   end
   
 end

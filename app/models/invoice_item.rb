@@ -27,4 +27,8 @@ class InvoiceItem < ActiveRecord::Base
     return where(invoice_id: params[:invoice_id]).as_json if params[:invoice_id]
   end
 
+  def subtotal
+    quantity * unit_price
+  end
+
 end

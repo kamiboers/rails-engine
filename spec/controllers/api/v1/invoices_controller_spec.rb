@@ -133,7 +133,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
     end
   end
 
-  describe "#return_transactions" do
+  describe "#transactions" do
     it "successfully returns specific invoice transaction data" do
       create_invoice(2)
       invoice1 = Invoice.first
@@ -154,7 +154,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
     end
   end
 
-  describe "#return_invoice_items" do
+  describe "#invoice_items" do
     it "successfully returns specific invoice invoice_item data" do
       create_invoice(2)
       invoice1 = Invoice.first
@@ -175,7 +175,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
     end
   end
 
-  describe "#return_items" do
+  describe "#items" do
     it "successfully returns specific invoice item data" do
       create_invoice
       invoice = Invoice.last
@@ -197,7 +197,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
     end
   end
 
-  describe "#return_customer" do
+  describe "#customer" do
     it "successfully returns specific invoice customer data" do
       create_customer(1, "John")
       create_customer(1, "Susan")
@@ -219,7 +219,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
     end
   end
 
-  describe "#return_merchant" do
+  describe "#merchant" do
     it "successfully returns specific invoice merchant data" do
       create_merchant(1, "MEGATRON")
       create_merchant(1, "Captain Planet")
