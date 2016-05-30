@@ -26,4 +26,10 @@ class Invoice < ActiveRecord::Base
     return where(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
   end
 
+  def self.successful
+    where(invoice.successful)
+  end
+
+
 end
+# invoices.successful.joins(:invoice_items).sum("quantity * unit_price")

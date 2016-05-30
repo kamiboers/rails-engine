@@ -10,7 +10,7 @@ RSpec.describe Merchant, type: :model do
     invoice = Invoice.last
     create_transaction(1, "cc_number", "failed", invoice.id)
     create_transaction(2, "0123456789101112", "success", invoice.id)
-    successes = merchant.successful_transactions
+    successes = merchant.transactions.successful
 
     expect(successes.count).to eq(2)
     expect(successes.pluck(:cc_number)).to include("0123456789101112")
