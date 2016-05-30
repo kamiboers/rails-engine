@@ -14,11 +14,21 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def find
-    render :json => {merchant: Merchant.search(params)}
+    render :json => { merchant: Merchant.search(params) }
   end
 
   def find_all
-    render :json => {merchants: Merchant.search_all(params)}
+    render :json => { merchants: Merchant.search_all(params) }
+  end
+
+  def items
+    merchant = Merchant.find(params[:id])
+    render :json => { merchant: merchant, items: merchant.return_items }
+  end
+
+  def invoices
+    merchant = Merchant.find(params[:id])
+    render :json => { merchant: merchant, invoices: merchant.return_invoices }
   end
  
 

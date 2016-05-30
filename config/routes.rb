@@ -9,12 +9,18 @@ Rails.application.routes.draw do
         get "#{database}/find_all", to: "#{database}#find_all", as: "find_all_#{database}"
       end
 
+
+      get "merchants/:id/items", to: "merchants#items", as: "merchant_items"
+      get "merchants/:id/invoices", to: "merchants#invoices", as: "merchant_invoices"
+
+
       resources :items, only: [:index, :show]
       resources :merchants, only: [:index, :show]
       resources :customers, only: [:index, :show]
       resources :invoices, only: [:index, :show]
       resources :invoice_items, only: [:index, :show]
       resources :transactions, only: [:index, :show]
+
 
     end
   end

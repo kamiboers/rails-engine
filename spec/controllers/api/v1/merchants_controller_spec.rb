@@ -92,6 +92,42 @@ end
   end
 end
 
+describe "#return_items" do
+    it "successfully returns specific merchant item data" do
+      create_merchant(2)
+      merchant = Merchant.last
+      create_item
+      create_item(2, merchant.id, "Merchant ##{merchant.id}'s Item")
+      item = Item.last
+      
+      get :items, id: merchant.id
+
+      merchant_items = JSON.parse(response.body)["items"]
+
+      assert_response :success
+      expect(merchant_items.count).to eq(2)
+      expect(merchant_items.last["name"]).to eq("Merchant ##{merchant.id}'s Item")
+    end
+  end
+
+describe "#return_invoices" do
+    it "successfully returns specific merchant invoice data" do
+      create_merchant(2)
+      merchant = Merchant.last
+      create_invoice
+      create_invoice(2, "paid", 1, merchant.id)
+      invoice = Invoice.last
+      
+      get :invoices, id: merchant.id
+
+      merchant_invoices = JSON.parse(response.body)["invoices"]
+
+      assert_response :success
+      expect(merchant_invoices.count).to eq(2)
+      expect(merchant_invoices.last["id"]).to eq(invoice.id)
+    end
+  end
+
   # describe "#create" do
   #   it "successfully creates an merchant" do
   #     assert_equal 0, Merchant.count
