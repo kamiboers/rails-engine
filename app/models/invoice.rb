@@ -26,24 +26,4 @@ class Invoice < ActiveRecord::Base
     return where(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
   end
 
-  def return_transactions
-    transactions.as_json
-  end
-
-  def return_invoice_items
-    invoice_items.as_json
-  end
-
-  def return_items
-    items.as_json
-  end
-
-  def return_merchant
-    merchant.as_json
-  end
-
-  def return_customer
-    customer.as_json
-  end
-
 end

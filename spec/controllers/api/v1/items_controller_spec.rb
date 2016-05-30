@@ -161,8 +161,45 @@ describe "#find_all" do
       expect(first_selected_merchant_id).to eq(99)
       expect(last_selected_merchant_id).to eq(99)
     end
-
 end
+
+(n=1, unit_price=rand(123.45..543.21), quantity=rand(1..18), item_id=1, invoice_id=1)
+
+
+ describe "#invoice_items" do
+    it "successfully returns specific item invoice_item data" do
+      create_item
+      item = Item.last
+      create_invoice_item(1, 69.96, 9, item.id)
+      create_invoice_item(1, 74.47, 9, item.id)
+      invoice1 = Invoice.first
+      invoice2 = Invoice.last
+
+      get :invoice_items, id: item.id
+      item_invoice_items = JSON.parse(response.body)["invoice_items"]
+
+      assert_response :success
+      expect(item_invoice_items.count).to eq(2)
+      expect(item_invoice_items.to_s).to include("69.96")
+      expect(item_invoice_items.to_s).to include("74.47")
+    end
+  end
+
+  describe "#merchant" do
+    it "successfully returns specific item merchant data" do
+      create_merchant(1, "T-Pain")
+      merchant = Merchant.last
+      create_item(1, merchant.id)
+      item = Item.last
+
+      get :merchant, id: item.id
+      item_merchant = JSON.parse(response.body)["merchant"]
+
+      assert_response :success
+      expect(item_merchant.to_s).to include("T-Pain")
+    end
+  end
+
 
   # describe "#create" do
   #   it "successfully creates an item" do

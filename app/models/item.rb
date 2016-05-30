@@ -26,5 +26,5 @@ class Item < ActiveRecord::Base
     return where(unit_price: params[:unit_price]).as_json if params[:unit_price]
     return where(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
   end
-
+  
 end

@@ -23,12 +23,12 @@ class Api::V1::InvoiceItemsController < ApplicationController
 
   def invoice
     invoice_item = InvoiceItem.find(params[:id])
-    render :json => {invoice_item: invoice_item, invoice: invoice_item.return_invoice}
+    render :json => {invoice_item: invoice_item, invoice: invoice_item.invoice}
   end
 
   def item
     invoice_item = InvoiceItem.find(params[:id])
-    render :json => {invoice_item: invoice_item, item: invoice_item.return_item}
+    render :json => {invoice_item: invoice_item, item: invoice_item.item}
   end
 
   # def create

@@ -21,6 +21,16 @@ class Api::V1::ItemsController < ApplicationController
     render :json => {items: Item.search_all(params)}
   end
 
+  def invoice_items
+    item = Item.find(params[:id])
+    render :json => {item: item, invoice_items: item.invoice_items}
+  end
+
+  def merchant
+    item = Item.find(params[:id])
+    render :json => {item: item, merchant: item.merchant}
+  end
+
   # def create
   #   respond_with Item.create(item_params), location: nil
   # end

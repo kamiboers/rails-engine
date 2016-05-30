@@ -27,12 +27,4 @@ class InvoiceItem < ActiveRecord::Base
     return where(invoice_id: params[:invoice_id]).as_json if params[:invoice_id]
   end
 
-  def return_invoice
-    invoice.as_json
-  end
-
-  def return_item
-    item.as_json
-  end
-
 end

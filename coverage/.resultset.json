@@ -203,6 +203,16 @@
         4,
         null,
         null,
+        1,
+        1,
+        1,
+        null,
+        null,
+        1,
+        1,
+        1,
+        null,
+        null,
         null,
         null,
         null,
@@ -376,14 +386,6 @@
         1,
         null,
         null,
-        1,
-        1,
-        null,
-        null,
-        1,
-        1,
-        null,
-        null,
         null
       ],
       "/Users/Kami/turing/rails-engine/app/models/invoice.rb": [
@@ -413,26 +415,6 @@
         3,
         2,
         1,
-        null,
-        null,
-        1,
-        2,
-        null,
-        null,
-        1,
-        2,
-        null,
-        null,
-        1,
-        1,
-        null,
-        null,
-        1,
-        2,
-        null,
-        null,
-        1,
-        2,
         null,
         null,
         null
@@ -489,14 +471,6 @@
         2,
         null,
         null,
-        1,
-        1,
-        null,
-        null,
-        1,
-        1,
-        null,
-        null,
         null
       ],
       "/Users/Kami/turing/rails-engine/app/models/transaction.rb": [
@@ -527,6 +501,6 @@
         null
       ]
     },
-    "timestamp": 1464590821
+    "timestamp": 1464591869
   }
 }

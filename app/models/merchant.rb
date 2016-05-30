@@ -16,13 +16,5 @@ class Merchant < ActiveRecord::Base
     return find(params[:id]).as_json if params[:id]
     return where("lower(name) = ?", params[:name].downcase).as_json if params[:name]
   end
-
-  def return_items
-    items.as_json
-  end
-
-  def return_invoices
-    invoices.as_json
-  end
-
+  
 end
