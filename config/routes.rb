@@ -3,12 +3,12 @@ Rails.application.routes.draw do
   
   namespace :api do
     namespace :v1 do
+      
       databases.each do |database|
         get "#{database}/random", to: "#{database}#random", as: "random_#{database}"
         get "#{database}/find", to: "#{database}#find", as: "find_#{database}"
         get "#{database}/find_all", to: "#{database}#find_all", as: "find_all_#{database}"
       end
-
 
       get "merchants/:id/items", to: "merchants#items", as: "merchant_items"
       get "merchants/:id/invoices", to: "merchants#invoices", as: "merchant_invoices"
@@ -19,6 +19,16 @@ Rails.application.routes.draw do
       get "invoices/:id/customer", to: "invoices#customer", as: "invoices_customer"
       get "invoices/:id/merchant", to: "invoices#merchant", as: "invoices_merchant"
 
+      get "invoice_items/:id/invoice", to: "invoice_items#invoice", as: "invoice_item_invoice"
+      get "invoice_items/:id/item", to: "invoice_items#item", as: "invoice_item_item"
+      
+      get "items/:id/invoice_items", to: "items#invoice_items", as: "item_invoice_items"
+      get "items/:id/merchant", to: "items#merchant", as: "item_merchant"
+      
+      get "transactions/:id/invoice", to: "transactions#invoice", as: "transaction_invoice"
+      
+      get "customers/:id/invoices", to: "customers#invoices", as: "customer_invoices"
+      get "customers/:id/transactions", to: "customers#transactions", as: "customer_transactions"
 
       resources :items, only: [:index, :show]
       resources :merchants, only: [:index, :show]

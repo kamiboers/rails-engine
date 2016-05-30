@@ -119,6 +119,36 @@ end
       expect(selected.last["invoice_id"]).to eq(99)
   end
 end
+
+  describe "#invoice" do
+    it "successfully returns invoice item's invoice data" do
+      create_invoice(1, "arbitrary status")
+      invoice = Invoice.last
+      create_invoice_item(1, 10.99, 2, 3, invoice.id)
+      invoice_item = InvoiceItem.last
+
+      get :invoice, id: invoice_item.id
+      invoice_item_invoice = JSON.parse(response.body)["invoice"]
+
+      assert_response :success
+      expect(invoice_item_invoice.to_s).to include("arbitrary status")
+    end
+  end
+
+  describe "#item" do
+    it "successfully returns invoice item's item data" do
+      create_item(1, 1, "II's Item")
+      item = Item.last
+      create_invoice_item(1, 10.99, 2, item.id, 1)
+      invoice_item = InvoiceItem.last
+
+      get :item, id: invoice_item.id
+      invoice_item_item = JSON.parse(response.body)["item"]
+
+      assert_response :success
+      expect(invoice_item_item.to_s).to include("II's Item")
+    end
+  end
   # describe "#create" do
   #   it "successfully creates an invoice_item" do
   #     assert_equal 0, InvoiceItem.count
