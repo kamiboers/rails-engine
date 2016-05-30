@@ -23,7 +23,11 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.successful
-    where(result: "success")
+    pluck(:result).include?("success")
+  end
+
+  def success
+    result == "success"
   end
 
 end

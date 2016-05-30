@@ -5,11 +5,15 @@ RSpec.describe Transaction, type: :model do
   it { should validate_presence_of :result }
   it { should validate_presence_of :invoice_id }
 
-  it "returns only successful transactions with #successful" do
+  it "returns whether a group of transactions includes a success" do
     create_transaction(1, "cc_number", "failed")
-    create_transaction(2, "cc_number", "success")
+    transaction1 = Transaction.last
+    create_transaction(1, "cc_number", "success")
+    transaction2 = Transaction.last
 
-    expect(Transaction.successful.count).to eq(2)
+    expect(transaction1.success).to eq(false)
+    expect(transaction2.success).to eq(true)
+    expect(Transaction.successful).to eq(true)
   end
 
 end
