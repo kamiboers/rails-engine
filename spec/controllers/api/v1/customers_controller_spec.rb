@@ -122,6 +122,46 @@ end
   end
 end
 
+describe "#invoices" do
+    it "successfully returns specific customer invoice data" do
+      create_customer(2)
+      customer = Customer.last
+      create_invoice
+      create_invoice(2, "paid", customer.id)
+      invoice = Invoice.last
+      
+      get :invoices, id: customer.id
+
+      customer_invoices = JSON.parse(response.body)["invoices"]
+
+      assert_response :success
+      expect(customer_invoices.count).to eq(2)
+      expect(customer_invoices.last["id"]).to eq(invoice.id)
+    end
+  end
+(n=1, cc_number=rand(1111111111111111..9999999999999999).to_s, result="resultat", invoice_id=1)
+
+describe "#transactions" do
+    it "successfully returns specific customer transaction data" do
+      create_customer
+      customer = Customer.last
+      create_invoice(1, "paid", customer.id)
+      invoice = Invoice.last
+      create_transaction(1, "cc_number", "other transaction result", invoice.id)
+      create_transaction(1, "cc_number", "transaction result", invoice.id)
+      transaction = Transaction.last
+      
+      get :transactions, id: customer.id
+      customer_transactions = JSON.parse(response.body)["transactions"]
+
+      assert_response :success
+      expect(customer_transactions.count).to eq(2)
+      expect(customer_transactions.to_s).to include("transaction result")
+      expect(customer_transactions.to_s).to include("other transaction result")
+    end
+  end
+
+
   # describe "#create" do
   #   it "successfully creates an customer" do
   #     assert_equal 0, Customer.count

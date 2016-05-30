@@ -92,7 +92,7 @@ end
   end
 end
 
-describe "#return_items" do
+describe "#items" do
     it "successfully returns specific merchant item data" do
       create_merchant(2)
       merchant = Merchant.last
@@ -110,7 +110,7 @@ describe "#return_items" do
     end
   end
 
-describe "#return_invoices" do
+describe "#invoices" do
     it "successfully returns specific merchant invoice data" do
       create_merchant(2)
       merchant = Merchant.last
