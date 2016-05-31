@@ -49,7 +49,7 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
 
       assert_response :success
       expect(response.body).to include(invoice_item.quantity.to_s)
-      expect(response.body).to include(invoice_item.unit_price.to_s)
+      expect(response.body).to include((invoice_item.unit_price).to_s)
     end
 
     it "returns invoice_item with cc_number in search parameters" do
@@ -61,12 +61,22 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
       assert_response :success
       expect(response.body).to include(invoice_item.id.to_s)
   end
+
+    it "returns invoice_item with unit_price in search parameters" do
+      create_invoice_item
+      invoice_item = InvoiceItem.first
+
+      get :find, unit_price: (invoice_item.unit_price/100.0).to_f.to_s
+
+      assert_response :success
+      expect(response.body).to include(invoice_item.id.to_s)
+  end
 end
 
   describe "#find_all" do
     it "returns all invoice_items with unit_price in search parameters" do
-      create_invoice_item(1, 12.50)
-      create_invoice_item(2, 12.75)
+      create_invoice_item(1, 1250)
+      create_invoice_item(2, 1275)
       
       get :find_all, unit_price: 12.75
       selected = JSON.parse(response.body)["invoice_items"]
@@ -76,8 +86,8 @@ end
 
       assert_response :success
       expect(selected.count).to eq(2)
-      expect(first_selected_price).to eq("12.75")
-      expect(last_selected_price).to eq("12.75")
+      expect(first_selected_price).to eq(1275)
+      expect(last_selected_price).to eq(1275)
     end
 
     it "returns all invoice_items with quantity in search parameters regardless of case" do

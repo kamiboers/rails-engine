@@ -49,4 +49,15 @@ class Merchant < ActiveRecord::Base
     invoices.where(updated_at: date.beginning_of_day..date.end_of_day).joins(:invoice_items).paid.pluck("quantity * unit_price").sum
   end
 
+  def favorite_customer
+    a = invoices.paid
+    a = a.each_with_object(Hash.new(0)) { |invoice,counts| counts[invoice.customer_id] += 1 }
+    a = a.sort_by {|k,v| v}.reverse
+    Customer.find(a.first.first)
+  end
+
+  def customers_with_pending_invoices
+    invoices.joins(:transactions).where(transactions: {result: "failed"}).map { |invoice| invoice.customer }.uniq
+  end
+
 end

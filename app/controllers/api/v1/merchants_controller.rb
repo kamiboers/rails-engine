@@ -39,9 +39,25 @@ class Api::V1::MerchantsController < ApplicationController
     render :json => { top_merchants: Merchant.top_by_item_count(params[:quantity]) }
   end
 
-  def revenue
+  def all_revenue
     render :json => { date_revenue: Merchant.revenue_by_date(params[:date]) }
   end
+
+  def revenue
+    merchant = Merchant.find(params[:id])
+    params[:date] ? (render :json => { revenue: merchant.revenue_by_date(params[:date]) }) : (render :json => { revenue: merchant.sales })
+  end
+
+  def favorite_customer
+    merchant = Merchant.find(params[:id])
+    render :json => { favorite_customer: merchant.favorite_customer }
+  end
+
+  def customers_with_pending_invoices
+    merchant = Merchant.find(params[:id])
+    render :json => { pending_customers: merchant.customers_with_pending_invoices }
+  end
+  
 
   # def create
   #   respond_with Merchant.create(item_params), location: nil
