@@ -14,27 +14,27 @@
       <img src="./assets/0.10.0/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2016-05-31T00:04:08-06:00">2016-05-31T00:04:08-06:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2016-05-31T00:19:35-06:00">2016-05-31T00:19:35-06:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
         <div class="file_list_container" id="AllFiles">
   <h2>
     <span class="group_name">All Files</span>
-    (<span class="covered_percent"><span class="green">100.0%</span></span>
+    (<span class="covered_percent"><span class="green">99.6%</span></span>
      covered at
      <span class="covered_strength">
        <span class="green">
-         1.53
+         1.52
        </span>
     </span> hits/line)
   </h2>
   <a name="AllFiles"></a>
   <div>
     <b>14</b> files in total.
-    <b>250</b> relevant lines. 
+    <b>251</b> relevant lines. 
     <span class="green"><b>250</b> lines covered</span> and
-    <span class="red"><b>0</b> lines missed </span>
+    <span class="red"><b>1</b> lines missed </span>
   </div>
   <table class="file_list">
     <thead>
@@ -143,11 +143,11 @@
       <tr>
         <td class="strong"><a href="#f91f94315fbe8ce1050e3abc977407040acf6c8e" class="src_link" title="app/models/invoice.rb">app/models/invoice.rb</a></td>
         <td class="green strong">100.0 %</td>
-        <td>43</td>
+        <td>42</td>
         <td>27</td>
         <td>27</td>
         <td>0</td>
-        <td>2.0</td>
+        <td>2.1</td>
       </tr>
       
       <tr>
@@ -172,12 +172,12 @@
       
       <tr>
         <td class="strong"><a href="#1f0add12216fc453dd437cb66f83b69d940bba07" class="src_link" title="app/models/merchant.rb">app/models/merchant.rb</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>45</td>
+        <td class="green strong">96.15 %</td>
+        <td>46</td>
+        <td>26</td>
         <td>25</td>
-        <td>25</td>
-        <td>0</td>
-        <td>1.6</td>
+        <td>1</td>
+        <td>1.4</td>
       </tr>
       
       <tr>
@@ -306,20 +306,20 @@
           <div class="file_list_container" id="Models">
   <h2>
     <span class="group_name">Models</span>
-    (<span class="covered_percent"><span class="green">100.0%</span></span>
+    (<span class="covered_percent"><span class="green">99.25%</span></span>
      covered at
      <span class="covered_strength">
        <span class="green">
-         1.7
+         1.68
        </span>
     </span> hits/line)
   </h2>
   <a name="Models"></a>
   <div>
     <b>6</b> files in total.
-    <b>133</b> relevant lines. 
+    <b>134</b> relevant lines. 
     <span class="green"><b>133</b> lines covered</span> and
-    <span class="red"><b>0</b> lines missed </span>
+    <span class="red"><b>1</b> lines missed </span>
   </div>
   <table class="file_list">
     <thead>
@@ -348,11 +348,11 @@
       <tr>
         <td class="strong"><a href="#f91f94315fbe8ce1050e3abc977407040acf6c8e" class="src_link" title="app/models/invoice.rb">app/models/invoice.rb</a></td>
         <td class="green strong">100.0 %</td>
-        <td>43</td>
+        <td>42</td>
         <td>27</td>
         <td>27</td>
         <td>0</td>
-        <td>2.0</td>
+        <td>2.1</td>
       </tr>
       
       <tr>
@@ -377,12 +377,12 @@
       
       <tr>
         <td class="strong"><a href="#1f0add12216fc453dd437cb66f83b69d940bba07" class="src_link" title="app/models/merchant.rb">app/models/merchant.rb</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>45</td>
+        <td class="green strong">96.15 %</td>
+        <td>46</td>
+        <td>26</td>
         <td>25</td>
-        <td>25</td>
-        <td>0</td>
-        <td>1.6</td>
+        <td>1</td>
+        <td>1.4</td>
       </tr>
       
       <tr>
@@ -3066,8 +3066,8 @@
           <code class="ruby">  def self.paid</code>
         </li>
       
-        <li class="covered" data-hits="11" data-linenumber="34">
-          <span class="hits">11</span>
+        <li class="covered" data-hits="12" data-linenumber="34">
+          <span class="hits">12</span>
           
           <code class="ruby">    joins(:transactions).where(transactions: { result: &quot;success&quot; })</code>
         </li>
@@ -3075,52 +3075,46 @@
         <li class="never" data-hits="" data-linenumber="35">
           
           
-          <code class="ruby">    binding.pry</code>
+          <code class="ruby">  end</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="36">
           
           
-          <code class="ruby">  end</code>
+          <code class="ruby"></code>
         </li>
       
         <li class="covered" data-hits="1" data-linenumber="37">
           <span class="hits">1</span>
           
-          <code class="ruby"></code>
+          <code class="ruby">  def total</code>
         </li>
       
         <li class="covered" data-hits="3" data-linenumber="38">
           <span class="hits">3</span>
           
-          <code class="ruby">  def total</code>
+          <code class="ruby">    successful ? invoice_items.sum(&quot;quantity * unit_price&quot;) : 0</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="39">
           
           
-          <code class="ruby">    successful ? invoice_items.sum(&quot;quantity * unit_price&quot;) : 0</code>
+          <code class="ruby">  end</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="40">
           
           
-          <code class="ruby">  end</code>
+          <code class="ruby"></code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="41">
           
           
-          <code class="ruby"></code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="42">
-          
-          
           <code class="ruby"># invoices.successful.joins(:invoice_items).sum(&quot;quantity * unit_price&quot;).to_f</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="43">
+        <li class="never" data-hits="" data-linenumber="42">
           
           
           <code class="ruby">end</code>
@@ -3553,11 +3547,11 @@
         <div class="source_table" id="1f0add12216fc453dd437cb66f83b69d940bba07">
   <div class="header">
     <h3>app/models/merchant.rb</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
+    <h4><span class="green">96.15 %</span> covered</h4>
     <div>
-      <b>25</b> relevant lines. 
+      <b>26</b> relevant lines. 
       <span class="green"><b>25</b> lines covered</span> and
-      <span class="red"><b>0</b> lines missed.</span>
+      <span class="red"><b>1</b> lines missed.</span>
     </div>
   </div>
   
@@ -3792,14 +3786,14 @@
           <code class="ruby">  def revenue_by_date(date_string)</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="39">
-          <span class="hits">2</span>
+        <li class="covered" data-hits="1" data-linenumber="39">
+          <span class="hits">1</span>
           
           <code class="ruby">    format_string = &quot;%m/%d/&quot; + (date_string =~ /\d{4}/ ? &quot;%Y&quot; : &quot;%y&quot;)</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="40">
-          <span class="hits">2</span>
+        <li class="covered" data-hits="1" data-linenumber="40">
+          <span class="hits">1</span>
           
           <code class="ruby">    date = Date.parse(date_str) rescue Date.strptime(date_string, format_string)</code>
         </li>
@@ -3810,25 +3804,31 @@
           <code class="ruby">    </code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="42">
-          <span class="hits">2</span>
+        <li class="covered" data-hits="1" data-linenumber="42">
+          <span class="hits">1</span>
           
-          <code class="ruby">    invoices.paid.where(updated_at: date.beginning_of_day..date.end_of_day).joins(:invoice_items).sum(&quot;quantity * unit_price&quot;)</code>
+          <code class="ruby">    a = invoices.where(updated_at: date.beginning_of_day..date.end_of_day).joins(:invoice_items).paid.sum(&amp;:total)</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="43">
+        <li class="missed" data-hits="0" data-linenumber="43">
           
           
-          <code class="ruby">  end</code>
+          <code class="ruby">    binding.pry</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="44">
           
           
-          <code class="ruby"></code>
+          <code class="ruby">  end</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="45">
+          
+          
+          <code class="ruby"></code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="46">
           
           
           <code class="ruby">end</code>

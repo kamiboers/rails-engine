@@ -73,14 +73,13 @@ RSpec.describe Merchant, type: :model do
   it "returns revenue by date of transaction" do
     create_merchant
     merchant = Merchant.last
-    create_invoice
+    create_invoice(1, "shipped", 1, merchant.id)
     invoice = Invoice.last
     create_invoice_item(1, 20, 20, 1, invoice.id)
+    create_transaction(1, "cc_number", "success", invoice.id)
 
-    allow(Invoice).to receive(:paid).and_return([invoice])
     today = (Date.today).strftime("%m/%d/%Y")
     yesterday = (Date.yesterday).strftime("%m/%d/%Y")
-    binding.pry
 
     revenue_today = merchant.revenue_by_date(today)
     revenue_yesterday = merchant.revenue_by_date(yesterday)
