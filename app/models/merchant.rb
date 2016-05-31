@@ -39,8 +39,7 @@ class Merchant < ActiveRecord::Base
     format_string = "%m/%d/" + (date_string =~ /\d{4}/ ? "%Y" : "%y")
     date = Date.parse(date_str) rescue Date.strptime(date_string, format_string)
     
-    binding.pry
-    a = invoices.where(updated_at: date.beginning_of_day..date.end_of_day).joins(:invoice_items).paid.pluck(&:total).sum
+    invoices.where(updated_at: date.beginning_of_day..date.end_of_day).joins(:invoice_items).paid.pluck("quantity * unit_price").sum
   end
 
 end
