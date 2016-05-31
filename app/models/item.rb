@@ -15,16 +15,16 @@ class Item < ActiveRecord::Base
     return find(params[:id]).as_json if params[:id]
     return where("lower(name) = ?", params[:name].downcase).first.as_json if params[:name]
     return where("lower(description) like ?", "%" + params[:description].downcase + "%").first.as_json if params[:description]
-    return find_by(unit_price: params[:unit_price]).as_json if params[:unit_price]
     return find_by(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
+    return find_by(unit_price: (params[:unit_price]).to_f*100).as_json if params[:unit_price]
   end
 
    def self.search_all(params)
     return find(params[:id]).as_json if params[:id]
     return where("lower(name) = ?", params[:name].downcase).as_json if params[:name]
     return where("lower(description) like ?", "%" + params[:description].downcase + "%").as_json if params[:description]
-    return where(unit_price: params[:unit_price]).as_json if params[:unit_price]
     return where(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
+    return where(unit_price: (params[:unit_price]).to_f*100).as_json if params[:unit_price]
   end
   
 end

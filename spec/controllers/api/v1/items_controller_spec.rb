@@ -76,7 +76,7 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
 
   it "returns item with unit_price in search parameters" do
       create_item
-      create_item(1, 1, "Priced Item", "Description", 4321.12)
+      create_item(1, 1, "Priced Item", "Description", 432112)
       item = Item.last
 
       get :find, unit_price: 4321.12
@@ -89,7 +89,7 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
 
   it "returns item with merchant_id in search parameters" do
       create_item
-      create_item(1, 87, "Merchant's Item", "Description", 100.00)
+      create_item(1, 87, "Merchant's Item", "Description", 10000)
       item = Item.last
 
       get :find, merchant_id: 87
@@ -103,8 +103,8 @@ end
 
 describe "#find_all" do
     it "returns all items with unit_price in search parameters" do
-      create_item(1, 1, "name", "description", 121.50)
-      create_item(2, 1, "name", "description", 122.75)
+      create_item(1, 1, "name", "description", 12150)
+      create_item(2, 1, "name", "description", 12275)
       
       get :find_all, unit_price: 122.75
       selected = JSON.parse(response.body)["items"]
@@ -114,13 +114,13 @@ describe "#find_all" do
 
       assert_response :success
       expect(selected.count).to eq(2)
-      expect(first_selected_price).to eq("122.75")
-      expect(last_selected_price).to eq("122.75")
+      expect(first_selected_price).to eq(12275)
+      expect(last_selected_price).to eq(12275)
     end
 
     it "returns all items with name in search parameters" do
-      create_item(1, 1, "name", "description", 122.75)
-      create_item(2, 1, "Smelloscope", "description", 122.75)
+      create_item(1, 1, "name", "description", 12275)
+      create_item(2, 1, "Smelloscope", "description", 12275)
       
       get :find_all, name: "SmellOSCOPe"
       selected = JSON.parse(response.body)["items"]
@@ -167,8 +167,8 @@ end
     it "successfully returns specific item invoice_item data" do
       create_item
       item = Item.last
-      create_invoice_item(1, 69.96, 9, item.id)
-      create_invoice_item(1, 74.47, 9, item.id)
+      create_invoice_item(1, 6996, 9, item.id)
+      create_invoice_item(1, 7447, 9, item.id)
       invoice1 = Invoice.first
       invoice2 = Invoice.last
 
@@ -177,8 +177,8 @@ end
 
       assert_response :success
       expect(item_invoice_items.count).to eq(2)
-      expect(item_invoice_items.to_s).to include("69.96")
-      expect(item_invoice_items.to_s).to include("74.47")
+      expect(item_invoice_items.to_s).to include("6996")
+      expect(item_invoice_items.to_s).to include("7447")
     end
   end
 

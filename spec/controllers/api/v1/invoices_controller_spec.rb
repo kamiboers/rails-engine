@@ -159,8 +159,8 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       create_invoice(2)
       invoice1 = Invoice.first
       invoice2 = Invoice.last
-      create_invoice_item(1, 10.99, 2, 3, invoice1.id)
-      create_invoice_item(2, 20.77, 2, 3, invoice2.id)
+      create_invoice_item(1, 1099, 2, 3, invoice1.id)
+      create_invoice_item(2, 2077, 2, 3, invoice2.id)
 
       get :invoice_items, id: invoice1.id
       invoice1_invoice_items = JSON.parse(response.body)["invoice_items"]
@@ -169,9 +169,9 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
       assert_response :success
       expect(invoice1_invoice_items.count).to eq(1)
-      expect(invoice1_invoice_items.to_s).to include("10.99")
+      expect(invoice1_invoice_items.to_s).to include("1099")
       expect(invoice2_invoice_items.count).to eq(2)
-      expect(invoice2_invoice_items.to_s).to include("20.77")
+      expect(invoice2_invoice_items.to_s).to include("2077")
     end
   end
 
@@ -184,8 +184,8 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       create_item(1, 1, "Other Invoice Item")
       item2 = Item.last
 
-      create_invoice_item(1, 100.00, 3, item1.id, invoice.id)
-      create_invoice_item(1, 100.00, 3, item2.id, invoice.id)
+      create_invoice_item(1, 10000, 3, item1.id, invoice.id)
+      create_invoice_item(1, 10000, 3, item2.id, invoice.id)
 
       get :items, id: invoice.id
       found_invoice_items = JSON.parse(response.body)["items"]
