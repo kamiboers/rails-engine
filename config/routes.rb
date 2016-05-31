@@ -9,6 +9,10 @@ Rails.application.routes.draw do
         get "#{database}/find", to: "#{database}#find", as: "find_#{database}"
         get "#{database}/find_all", to: "#{database}#find_all", as: "find_all_#{database}"
       end
+      
+      get "merchants/most_revenue", to: "merchants#most_revenue", as: "merchant_most_revenue"
+      get "merchants/most_items", to: "merchants#most_items", as: "merchant_most_items"
+      get "merchants/revenue", to: "merchants#revenue", as: "merchant_revenue"
 
       get "merchants/:id/items", to: "merchants#items", as: "merchant_items"
       get "merchants/:id/invoices", to: "merchants#invoices", as: "merchant_invoices"

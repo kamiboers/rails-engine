@@ -70,7 +70,31 @@ RSpec.describe Merchant, type: :model do
     expect(top_three).not_to include(fourth_ranked)
   end
 
-  it "returns revenue by date of transaction" do
+  it "returns all merchants' revenue by date of transaction" do
+    create_merchant(2)
+    merchant1 = Merchant.first
+    merchant2 = Merchant.last
+    create_invoice(1, "shipped", 1, merchant1.id)
+    invoice1 = Invoice.last
+    create_invoice_item(1, 20, 20, 1, invoice1.id)
+    create_transaction(1, "cc_number", "success", invoice1.id)  
+
+    create_invoice(1, "shipped", 1, merchant2.id)
+    invoice2 = Invoice.last
+    create_invoice_item(1, 30, 30, 1, invoice2.id)
+    create_transaction(1, "cc_number", "success", invoice2.id)
+
+    today = (Date.today).strftime("%m/%d/%Y")
+    yesterday = (Date.yesterday).strftime("%m/%d/%Y")
+
+    revenue_today = Merchant.revenue_by_date(today)
+    revenue_yesterday = Merchant.revenue_by_date(yesterday)
+
+    expect(revenue_today).to eq(1300)
+    expect(revenue_yesterday).to eq(0)
+  end
+
+  it "returns merchant revenue by date of transaction" do
     create_merchant
     merchant = Merchant.last
     create_invoice(1, "shipped", 1, merchant.id)

@@ -32,7 +32,7 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
       merchant1_id = JSON.parse(response.body)["id"]
       get :random, format: :json
       merchant2_id = JSON.parse(response.body)["id"]
-   
+
       assert_response :success
       expect(id_array).to include(merchant1_id)
       expect(merchant1_id).not_to eq(merchant2_id)
@@ -59,8 +59,8 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
 
       assert_response :success
       expect(response.body).to include(merchant.id.to_s)
+    end
   end
-end
 
   describe "#find_all" do
     it "returns all merchants with name in search parameters" do
@@ -89,10 +89,10 @@ end
       
       assert_response :success
       expect(selected.count).to eq(2)
+    end
   end
-end
 
-describe "#items" do
+  describe "#items" do
     it "successfully returns specific merchant item data" do
       create_merchant(2)
       merchant = Merchant.last
@@ -110,7 +110,7 @@ describe "#items" do
     end
   end
 
-describe "#invoices" do
+  describe "#invoices" do
     it "successfully returns specific merchant invoice data" do
       create_merchant(2)
       merchant = Merchant.last
@@ -126,6 +126,78 @@ describe "#invoices" do
       expect(merchant_invoices.count).to eq(2)
       expect(merchant_invoices.last["id"]).to eq(invoice.id)
     end
+  end
+
+  describe "#most_revenue" do
+    it "successfully returns top x merchants by revenue" do
+      fourth_ranked = create_merchant(1, "Fourth Ranked")
+      third_ranked = create_merchant(1, "Third Ranked")
+      second_ranked = create_merchant(1, "Second Ranked")
+      first_ranked = create_merchant(1, "First Ranked")
+
+      allow(fourth_ranked).to receive(:sales).and_return(05)
+      allow(third_ranked).to receive(:sales).and_return(10)
+      allow(second_ranked).to receive(:sales).and_return(15)
+      allow(first_ranked).to receive(:sales).and_return(20)
+
+      get :most_revenue, quantity: 3
+      top_three = JSON.parse(response.body)["top_merchants"]
+
+      expect(top_three.to_s).to include("First Ranked")
+      expect(top_three.to_s).to include("Second Ranked")
+      expect(top_three.to_s).to include("Third Ranked")
+      expect(top_three.to_s).not_to include("Fourth Ranked")
+    end
+  end
+
+  describe "#most_items" do
+    it "returns top merchants by number of items" do
+      fourth_ranked = create_merchant(1, "Fourth Ranked")
+      third_ranked = create_merchant(1, "Third Ranked")
+      second_ranked = create_merchant(1, "Second Ranked")
+      first_ranked = create_merchant(1, "First Ranked")
+
+      allow(fourth_ranked).to receive(:item_count).and_return(05)
+      allow(third_ranked).to receive(:item_count).and_return(10)
+      allow(second_ranked).to receive(:item_count).and_return(15)
+      allow(first_ranked).to receive(:item_count).and_return(20)
+      
+      get :most_items, quantity: 3
+      top_three = JSON.parse(response.body)["top_merchants"]
+
+
+      expect(top_three.to_s).to include("First Ranked")
+      expect(top_three.to_s).to include("Second Ranked")
+      expect(top_three.to_s).to include("Third Ranked")
+      expect(top_three.to_s).not_to include("Fourth Ranked")
+    end
+  end
+
+  describe "#revenue_by_date"
+  it "returns all merchants' revenue by date of transaction" do
+    create_merchant(2)
+    merchant1 = Merchant.first
+    merchant2 = Merchant.last
+    create_invoice(1, "shipped", 1, merchant1.id)
+    invoice1 = Invoice.last
+    create_invoice_item(1, 20, 20, 1, invoice1.id)
+    create_transaction(1, "cc_number", "success", invoice1.id)  
+
+    create_invoice(1, "shipped", 1, merchant2.id)
+    invoice2 = Invoice.last
+    create_invoice_item(1, 30, 30, 1, invoice2.id)
+    create_transaction(1, "cc_number", "success", invoice2.id)
+
+    today = (Date.today).strftime("%m/%d/%Y")
+    yesterday = (Date.yesterday).strftime("%m/%d/%Y")
+
+    get :revenue, date: today
+    revenue_today = JSON.parse(response.body)["date_revenue"]
+    get :revenue, date: yesterday
+    revenue_yesterday = JSON.parse(response.body)["date_revenue"]
+
+    expect(revenue_today.to_f).to eq(1300)
+    expect(revenue_yesterday.to_f).to eq(0)
   end
 
   # describe "#create" do

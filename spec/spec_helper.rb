@@ -110,6 +110,7 @@ def create_merchant(n=1, name="Merchant")
   n.times do
     Merchant.create(name: name)
   end
+  Merchant.last
 end
 
 def create_customer(n=1, first_name="Customer", last_name="Smith")
