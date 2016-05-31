@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       
       get "merchants/most_revenue", to: "merchants#most_revenue", as: "merchants_most_revenue"
       get "merchants/most_items", to: "merchants#most_items", as: "merchants_most_items"
-      get "merchants/revenue", to: "merchants#revenue", as: "merchants_revenue"
+      get "merchants/revenue", to: "merchants#all_revenue", as: "merchants_revenue"
 
       get "merchants/:id/items", to: "merchants#items", as: "merchant_items"
       get "merchants/:id/invoices", to: "merchants#invoices", as: "merchant_invoices"
@@ -29,13 +29,18 @@ Rails.application.routes.draw do
       get "invoice_items/:id/invoice", to: "invoice_items#invoice", as: "invoice_item_invoice"
       get "invoice_items/:id/item", to: "invoice_items#item", as: "invoice_item_item"
       
+      get "items/most_revenue", to: "items#most_revenue", as: "items_most_revenue"
+      get "items/most_items", to: "items#most_items", as: "items_most_items"
+
       get "items/:id/invoice_items", to: "items#invoice_items", as: "item_invoice_items"
       get "items/:id/merchant", to: "items#merchant", as: "item_merchant"
+      get "items/:id/best_day", to: "items#best_day", as: "item_best_day"
       
       get "transactions/:id/invoice", to: "transactions#invoice", as: "transaction_invoice"
       
       get "customers/:id/invoices", to: "customers#invoices", as: "customer_invoices"
       get "customers/:id/transactions", to: "customers#transactions", as: "customer_transactions"
+      get "customers/:id/favorite_merchant", to: "customers#favorite_merchant", as: "customer_favorite_merchant"
 
       resources :items, only: [:index, :show]
       resources :merchants, only: [:index, :show]
