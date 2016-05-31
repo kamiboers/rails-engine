@@ -19,8 +19,8 @@ class Merchant < ActiveRecord::Base
     return where("lower(name) = ?", params[:name].downcase).as_json if params[:name]
   end
 
-  def successful_transactions
-    transactions.where(result: "success")
+  def sales
+    invoices.paid.joins(:invoice_items).sum("quantity * unit_price")
   end
-  
+
 end
