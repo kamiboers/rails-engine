@@ -4,7 +4,7 @@ class Item < ActiveRecord::Base
   has_many :invoices, through: :invoice_items
   validates :name, presence: true
   validates :description, presence: true
-  validates :unit_price, presence: true
+  validates :unit_price, presence: true, precision: 20, scale: 2
   validates :merchant_id, presence: true
 
   def self.random

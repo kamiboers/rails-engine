@@ -2,7 +2,7 @@ class InvoiceItem < ActiveRecord::Base
   belongs_to :invoice
   belongs_to :item
   validates :quantity, presence: true
-  validates :unit_price, presence: true
+  validates :unit_price, presence: true, precision: 20, scale: 2
   validates :item_id, presence: true
   validates :invoice_id, presence: true
 
