@@ -39,6 +39,10 @@ class Api::V1::ItemsController < ApplicationController
     render :json => {top_items: Item.top_by_items_sold(params[:quantity])}
   end
 
+  def best_day
+    item = Item.find(params[:id])
+    render :json => {best_day: item.best_day}
+  end
 
   # def create
   #   respond_with Item.create(item_params), location: nil

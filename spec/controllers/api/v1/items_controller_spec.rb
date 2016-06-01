@@ -241,23 +241,26 @@ end
     end
   end
 
-  #  describe "#best_day" do
-  #   it "successfully returns specific item top sales day" do
-  #     item = create_item
-  #     invoice1 = create_invoice
-  #     invoice2 = create_invoice
-  #     date = Date.parse("07/07/07")
-  #     invoice2.update(created_at: date, updated_at: date)
-  #     create_invoice_item(1, item.price, 1, item.id, invoice1.id)
-  #     create_invoice_item(1, item.price, 10, item.id, invoice2.id)
+   describe "#best_day" do
+    it "successfully returns specific item top sales day" do
+      item = create_item
+      invoice1 = create_invoice
+      invoice2 = create_invoice
+      date = Date.parse("07/07/07")
 
-  #     get :best_day, id: item.id
-  #     best_day = JSON.parse(response.body)["best_day"]
+      invoice_item1 = create_invoice_item(1, item.unit_price, 1, item.id, invoice1.id)
+      invoice_item2 = create_invoice_item(1, item.unit_price, 10, item.id, invoice2.id)
+      invoice_item2.update(created_at: date, updated_at: date)
+      create_transaction(1, "cc_number", "success", invoice1.id)
+      create_transaction(1, "cc_number", "success", invoice2.id)
 
-  #     assert_response :success
-  #     expect(best_day).to eq(Date.parse("07/07/07"))
-  #   end
-  # end
+      get :best_day, id: item.id
+      best_day = Date.parse(JSON.parse(response.body)["best_day"])
+
+      assert_response :success
+      expect(best_day).to eq(Date.parse("07/07/07"))
+    end
+  end
 
 
   # describe "#create" do

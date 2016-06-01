@@ -45,8 +45,9 @@ class Item < ActiveRecord::Base
   end
 
   def best_day
-    day_hash = invoice_items.joins(invoice: :transactions).where(transactions: {result: "success"}).group_by { |u| u.created_at.strftime("%d/%m/%y") }
-    binding.pry
+    day_hash = self.invoice_items.joins(invoice: :transactions).where(transactions: {result: "success"}).group_by { |u| u.created_at.strftime("%d/%m/%y") }
+    day = day_hash.sort_by { |key, value| value.sum { |u| u.quantity } }.reverse.first.first
+    return Date.parse(day)
   end
   
 end
