@@ -26,5 +26,20 @@ class Item < ActiveRecord::Base
     return where(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
     return where(unit_price: (params[:unit_price]).to_f*100).as_json if params[:unit_price]
   end
+
+  def self.top_by_revenue(n)
+    all.sort_by(&:revenue).reverse.first(n.to_i)
+  end
+
+
+  def revenue
+    raw_revenue = invoice_items.joins(invoice: :transactions).where(transactions: {result: "success"}).sum("quantity * unit_price")
+    raw_revenue/100.0
+  end
+
+  def best_day
+    day_hash = invoice_items.joins(invoice: :transactions).where(transactions: {result: "success"}).group_by { |u| u.created_at.strftime("%d/%m/%y") }
+    binding.pry
+  end
   
 end

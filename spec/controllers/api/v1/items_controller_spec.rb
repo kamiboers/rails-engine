@@ -169,8 +169,6 @@ end
       item = Item.last
       create_invoice_item(1, 6996, 9, item.id)
       create_invoice_item(1, 7447, 9, item.id)
-      invoice1 = Invoice.first
-      invoice2 = Invoice.last
 
       get :invoice_items, id: item.id
       item_invoice_items = JSON.parse(response.body)["invoice_items"]
@@ -196,6 +194,70 @@ end
       expect(item_merchant.to_s).to include("T-Pain")
     end
   end
+
+  describe "#most_revenue" do
+    it "returns the top x most successful items" do
+      fourth_ranked = create_item(1, 1, "Fourth Ranked")
+      third_ranked = create_item(1, 1, "Third Ranked")
+      second_ranked = create_item(1, 1, "Second Ranked")
+      first_ranked = create_item(1, 1, "First Ranked")
+
+      allow(fourth_ranked).to receive(:revenue).and_return(05)
+      allow(third_ranked).to receive(:revenue).and_return(10)
+      allow(second_ranked).to receive(:revenue).and_return(15)
+      allow(first_ranked).to receive(:revenue).and_return(20)
+
+      get :most_revenue, quantity: 3
+      top_three = JSON.parse(response.body)["top_items"]
+
+
+      expect(top_three.to_s).to include("First Ranked")
+      expect(top_three.to_s).to include("Second Ranked")
+      expect(top_three.to_s).to include("Third Ranked")
+      expect(top_three.to_s).not_to include("Fourth Ranked")
+    end
+  end
+
+  # describe "#most_items" do
+  #   it "returns the top x most successful items" do
+  #     fourth_ranked = create_item(1, "Fourth Place")
+  #     third_ranked = create_item(1, "Third Place")
+  #     second_ranked = create_item(1, "Second Place")
+  #     first_ranked = create_item(1, "First Place")
+
+  #     allow(fourth_ranked).to receive(:number_sold).and_return(05)
+  #     allow(third_ranked).to receive(:number_sold).and_return(10)
+  #     allow(second_ranked).to receive(:number_sold).and_return(15)
+  #     allow(first_ranked).to receive(:number_sold).and_return(20)
+
+  #     get :most_items, quantity: 3
+  #     top_three = JSON.parse(response.body)["top_items"]
+
+
+  #     expect(top_three.to_s).to include("First Ranked")
+  #     expect(top_three.to_s).to include("Second Ranked")
+  #     expect(top_three.to_s).to include("Third Ranked")
+  #     expect(top_three.to_s).not_to include("Fourth Ranked")
+  #   end
+  # end
+
+  #  describe "#best_day" do
+  #   it "successfully returns specific item top sales day" do
+  #     item = create_item
+  #     invoice1 = create_invoice
+  #     invoice2 = create_invoice
+  #     date = Date.parse("07/07/07")
+  #     invoice2.update(created_at: date, updated_at: date)
+  #     create_invoice_item(1, item.price, 1, item.id, invoice1.id)
+  #     create_invoice_item(1, item.price, 10, item.id, invoice2.id)
+
+  #     get :best_day, id: item.id
+  #     best_day = JSON.parse(response.body)["best_day"]
+
+  #     assert_response :success
+  #     expect(best_day).to eq(Date.parse("07/07/07"))
+  #   end
+  # end
 
 
   # describe "#create" do

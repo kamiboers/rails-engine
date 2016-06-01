@@ -31,6 +31,10 @@ class Api::V1::ItemsController < ApplicationController
     render :json => {item: item, merchant: item.merchant}
   end
 
+  def most_revenue
+    render :json => {top_items: Item.top_by_revenue(params[:quantity])}
+  end
+
   # def create
   #   respond_with Item.create(item_params), location: nil
   # end

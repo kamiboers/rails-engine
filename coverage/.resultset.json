@@ -223,6 +223,10 @@
         1,
         null,
         null,
+        1,
+        1,
+        null,
+        null,
         null,
         null,
         null,
@@ -510,6 +514,21 @@
         1,
         null,
         null,
+        1,
+        1,
+        null,
+        null,
+        null,
+        1,
+        4,
+        4,
+        null,
+        null,
+        1,
+        0,
+        0,
+        null,
+        null,
         null
       ],
       "/Users/Kami/turing/rails-engine/app/models/merchant.rb": [
@@ -614,6 +633,6 @@
         null
       ]
     },
-    "timestamp": 1464741442
+    "timestamp": 1464756487
   }
 }
