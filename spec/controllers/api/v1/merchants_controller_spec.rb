@@ -180,12 +180,12 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
       create_invoice_item(1, 30, 30, 1, invoice2.id)
       create_transaction(1, "cc_number", "success", invoice2.id)
 
-      today = (Date.today).strftime("%m/%d/%Y")
-      yesterday = (Date.yesterday).strftime("%m/%d/%Y")
+      today_str = (Time.now.utc).strftime("%m/%d/%Y")
+      yesterday_str = ((Time.now - 1.day).utc).strftime("%m/%d/%Y")
 
-      get :all_revenue, date: today
+      get :all_revenue, date: today_str
       revenue_today = JSON.parse(response.body)["date_revenue"]
-      get :all_revenue, date: yesterday
+      get :all_revenue, date: yesterday_str
       revenue_yesterday = JSON.parse(response.body)["date_revenue"]
 
       expect(revenue_today.to_f).to eq(1300)
@@ -216,13 +216,13 @@ describe "#revenue" do
     create_invoice_item(1, 300, 2, 1, invoice.id)
     create_transaction(1, "cc_number", "success", invoice.id)
 
-    today = (Date.today).strftime("%m/%d/%Y")
-    yesterday = (Date.yesterday).strftime("%m/%d/%Y")
+    today_str = (Time.now.utc).strftime("%m/%d/%Y")
+    yesterday_str = ((Time.now - 1.day).utc).strftime("%m/%d/%Y")
 
-    get :revenue, id: merchant.id, date: today
+    get :revenue, id: merchant.id, date: today_str
     revenue_today = JSON.parse(response.body)["revenue"]
     
-    get :revenue, id: merchant.id, date: yesterday
+    get :revenue, id: merchant.id, date: yesterday_str
     revenue_yesterday = JSON.parse(response.body)["revenue"]
 
     expect(revenue_today.to_f).to eq(600)

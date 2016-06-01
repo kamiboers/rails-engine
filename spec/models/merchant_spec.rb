@@ -71,25 +71,26 @@ RSpec.describe Merchant, type: :model do
   end
 
   it "returns all merchants' revenue by date of transaction" do
-    create_merchant(2)
-    merchant1 = Merchant.first
-    merchant2 = Merchant.last
-    create_invoice(1, "shipped", 1, merchant1.id)
-    invoice1 = Invoice.last
-    create_invoice_item(1, 20, 20, 1, invoice1.id)
-    create_transaction(1, "cc_number", "success", invoice1.id)  
+    merchant1 = create_merchant
+    merchant2 = create_merchant
+    today = (Date.today)
 
-    create_invoice(1, "shipped", 1, merchant2.id)
-    invoice2 = Invoice.last
+    invoice1 = create_invoice(1, "shipped", 1, merchant1.id)
+    create_invoice_item(1, 20, 20, 1, invoice1.id)
+    create_transaction(1, "cc_number", "success", invoice1.id)
+    invoice1.update(created_at: today, updated_at: today)
+
+    invoice2 = create_invoice(1, "shipped", 1, merchant2.id)
     create_invoice_item(1, 30, 30, 1, invoice2.id)
     create_transaction(1, "cc_number", "success", invoice2.id)
+    invoice2.update(created_at: today, updated_at: today)
 
-    today = (Date.today).strftime("%m/%d/%Y")
-    yesterday = (Date.yesterday).strftime("%m/%d/%Y")
+    today_str = (Time.now.utc).strftime("%m/%d/%Y")
+    yesterday_str = ((Time.now - 1.day).utc).strftime("%m/%d/%Y")
 
-    revenue_today = Merchant.revenue_by_date(today)
-    revenue_yesterday = Merchant.revenue_by_date(yesterday)
-
+    revenue_today = Merchant.revenue_by_date(today_str)
+    revenue_yesterday = Merchant.revenue_by_date(yesterday_str)
+# binding.pry
     expect(revenue_today).to eq(1300)
     expect(revenue_yesterday).to eq(0)
   end
@@ -102,11 +103,12 @@ RSpec.describe Merchant, type: :model do
     create_invoice_item(1, 20, 20, 1, invoice.id)
     create_transaction(1, "cc_number", "success", invoice.id)
 
-    today = (Date.today).strftime("%m/%d/%Y")
-    yesterday = (Date.yesterday).strftime("%m/%d/%Y")
+    today_str = (Time.now.utc).strftime("%m/%d/%Y")
+    yesterday_str = ((Time.now - 1.day).utc).strftime("%m/%d/%Y")
 
-    revenue_today = merchant.revenue_by_date(today)
-    revenue_yesterday = merchant.revenue_by_date(yesterday)
+
+    revenue_today = merchant.revenue_by_date(today_str)
+    revenue_yesterday = merchant.revenue_by_date(yesterday_str)
 
     expect(revenue_today).to eq(400)
     expect(revenue_yesterday).to eq(0)
