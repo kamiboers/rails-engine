@@ -31,6 +31,11 @@ class Api::V1::CustomersController < ApplicationController
     render :json => {customer: customer, transactions: customer.transactions}
   end
 
+  def favorite_merchant
+    customer = Customer.find(params[:id])
+    render :json => {favorite_merchant: customer.favorite_merchant}
+  end
+
   # def create
   #   respond_with Customer.create(item_params), location: nil
   # end

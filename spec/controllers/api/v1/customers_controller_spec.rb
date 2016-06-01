@@ -160,6 +160,28 @@ describe "#transactions" do
     end
   end
 
+describe "#favorite_merchant" do
+    it "successfully returns customer's most patronized merchant" do
+      customer = create_customer
+      merchant1 = create_merchant(1, "Inspector Gadget")
+      merchant2 = create_merchant(1, "Penny")
+      invoice1 = create_invoice(1, "paid", customer.id, merchant1.id)
+      invoice2 = create_invoice(1, "paid", customer.id, merchant1.id)
+      invoice3 = create_invoice(1, "paid", customer.id, merchant2.id)
+      invoice = Invoice.last
+      create_transaction(1, "cc_number", "success", invoice1.id)
+      create_transaction(1, "cc_number", "success", invoice2.id)
+      create_transaction(1, "cc_number", "success", invoice3.id)
+      
+      get :favorite_merchant, id: customer.id
+      favorite_merchant = JSON.parse(response.body)["favorite_merchant"]
+
+      assert_response :success
+      expect(favorite_merchant.to_s).to include("Inspector Gadget")
+      expect(favorite_merchant.to_s).not_to include("Penny")
+    end
+  end
+
 
   # describe "#create" do
   #   it "successfully creates an customer" do
