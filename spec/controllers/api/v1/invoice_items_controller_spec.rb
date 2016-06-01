@@ -52,7 +52,7 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
       expect(response.body).to include((invoice_item.unit_price).to_s)
     end
 
-    it "returns invoice_item with cc_number in search parameters" do
+    it "returns invoice_item with credit_card_number in search parameters" do
       create_invoice_item
       invoice_item = InvoiceItem.first
 

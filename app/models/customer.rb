@@ -11,15 +11,19 @@ class Customer < ActiveRecord::Base
   end
 
   def self.search(params)
-    return find(params[:id]).as_json if params[:id]
-    return where("lower(first_name) = ?", params[:first_name].downcase).first.as_json if params[:first_name]
-    return where("lower(last_name) = ?", params[:last_name].downcase).first.as_json if params[:last_name]
+    return find(params[:id]) if params[:id]
+    return where("lower(first_name) = ?", params[:first_name].downcase).first if params[:first_name]
+    return where("lower(last_name) = ?", params[:last_name].downcase).first if params[:last_name]
+    return find_by(created_at: params[:created_at].to_datetime) if params[:created_at]
+    return find_by(updated_at: params[:updated_at].to_datetime) if params[:updated_at]
   end
 
   def self.search_all(params)
-    return find(params[:id]).as_json if params[:id]
-    return where("lower(first_name) = ?", params[:first_name].downcase).as_json if params[:first_name]
-    return where("lower(last_name) = ?", params[:last_name].downcase).as_json if params[:last_name]
+    return find(params[:id]) if params[:id]
+    return where("lower(first_name) = ?", params[:first_name].downcase) if params[:first_name]
+    return where("lower(last_name) = ?", params[:last_name].downcase) if params[:last_name]
+    return where(created_at: params[:created_at].to_datetime) if params[:created_at]
+    return where(updated_at: params[:updated_at].to_datetime) if params[:updated_at]
   end
 
   def favorite_merchant

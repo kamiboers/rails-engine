@@ -251,8 +251,8 @@ end
       invoice_item1 = create_invoice_item(1, item.unit_price, 1, item.id, invoice1.id)
       invoice_item2 = create_invoice_item(1, item.unit_price, 10, item.id, invoice2.id)
       invoice_item2.update(created_at: date, updated_at: date)
-      create_transaction(1, "cc_number", "success", invoice1.id)
-      create_transaction(1, "cc_number", "success", invoice2.id)
+      create_transaction(1, "credit_card_number", "success", invoice1.id)
+      create_transaction(1, "credit_card_number", "success", invoice2.id)
 
       get :best_day, id: item.id
       best_day = Date.parse(JSON.parse(response.body)["best_day"])

@@ -14,21 +14,21 @@ class Api::V1::InvoiceItemsController < ApplicationController
   end
 
   def find
-    render :json => {invoice_item: InvoiceItem.search(params)}
+    render :json => InvoiceItem.search(params)
   end
 
   def find_all
-    render :json => {invoice_items: InvoiceItem.search_all(params)}
+    render :json => InvoiceItem.search_all(params)
   end
 
   def invoice
     invoice_item = InvoiceItem.find(params[:id])
-    render :json => {invoice_item: invoice_item, invoice: invoice_item.invoice}
+    render :json => invoice_item.invoice
   end
 
   def item
     invoice_item = InvoiceItem.find(params[:id])
-    render :json => {invoice_item: invoice_item, item: invoice_item.item}
+    render :json => invoice_item.item
   end
 
   # def create

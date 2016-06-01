@@ -146,8 +146,8 @@ describe "#transactions" do
       customer = Customer.last
       create_invoice(1, "paid", customer.id)
       invoice = Invoice.last
-      create_transaction(1, "cc_number", "transaction result", invoice.id)
-      create_transaction(1, "cc_number", "other result", invoice.id)
+      create_transaction(1, "credit_card_number", "transaction result", invoice.id)
+      create_transaction(1, "credit_card_number", "other result", invoice.id)
       transaction = Transaction.last
       
       get :transactions, id: customer.id
@@ -169,9 +169,9 @@ describe "#favorite_merchant" do
       invoice2 = create_invoice(1, "paid", customer.id, merchant1.id)
       invoice3 = create_invoice(1, "paid", customer.id, merchant2.id)
       invoice = Invoice.last
-      create_transaction(1, "cc_number", "success", invoice1.id)
-      create_transaction(1, "cc_number", "success", invoice2.id)
-      create_transaction(1, "cc_number", "success", invoice3.id)
+      create_transaction(1, "credit_card_number", "success", invoice1.id)
+      create_transaction(1, "credit_card_number", "success", invoice2.id)
+      create_transaction(1, "credit_card_number", "success", invoice3.id)
       
       get :favorite_merchant, id: customer.id
       favorite_merchant = JSON.parse(response.body)["favorite_merchant"]

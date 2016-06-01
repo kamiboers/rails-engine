@@ -1,6 +1,6 @@
 class Transaction < ActiveRecord::Base
   belongs_to :invoice
-  validates :cc_number, presence: true
+  validates :credit_card_number, presence: true
   validates :result, presence: true
   validates :invoice_id, presence: true
 
@@ -9,17 +9,21 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.search(params)
-    return find(params[:id]).as_json if params[:id]
-    return find_by(cc_number: params[:cc_number]).as_json if params[:cc_number]
-    return where("lower(result) = ?", params[:result].downcase).first.as_json if params[:result]
-    return find_by(invoice_id: params[:invoice_id]).as_json if params[:invoice_id]
+    return find(params[:id]) if params[:id]
+    return find_by(credit_card_number: params[:credit_card_number]) if params[:credit_card_number]
+    return where("lower(result) = ?", params[:result].downcase).first if params[:result]
+    return find_by(invoice_id: params[:invoice_id]) if params[:invoice_id]
+    return find_by(created_at: params[:created_at].to_datetime) if params[:created_at]
+    return find_by(updated_at: params[:updated_at].to_datetime) if params[:updated_at]
   end
 
    def self.search_all(params)
-    return find(params[:id]).as_json if params[:id]
-    return where("lower(result) = ?", params[:result].downcase).as_json if params[:result]
-    return where(cc_number: params[:cc_number]).as_json if params[:cc_number]
-    return where(invoice_id: params[:invoice_id]).as_json if params[:invoice_id]
+    return [] << find(params[:id]) if params[:id]
+    return where("lower(result) = ?", params[:result].downcase) if params[:result]
+    return where(credit_card_number: params[:credit_card_number]) if params[:credit_card_number]
+    return where(invoice_id: params[:invoice_id]) if params[:invoice_id]
+    return where(created_at: params[:created_at].to_datetime) if params[:created_at]
+    return where(updated_at: params[:updated_at].to_datetime) if params[:updated_at]
   end
 
   def self.successful

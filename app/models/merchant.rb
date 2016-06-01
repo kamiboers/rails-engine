@@ -11,13 +11,17 @@ class Merchant < ActiveRecord::Base
   end
 
   def self.search(params)
-    return find(params[:id]).as_json if params[:id]
-    return where("lower(name) = ?", params[:name].downcase).first.as_json if params[:name]
+    return find(params[:id]) if params[:id]
+    return where("lower(name) = ?", params[:name].downcase).first if params[:name]
+    return find_by(created_at: params[:created_at].to_datetime) if params[:created_at]
+    return find_by(updated_at: params[:updated_at].to_datetime) if params[:updated_at]
   end
 
   def self.search_all(params)
-    return find(params[:id]).as_json if params[:id]
-    return where("lower(name) = ?", params[:name].downcase).as_json if params[:name]
+    return [] << find(params[:id]) if params[:id]
+    return where("lower(name) = ?", params[:name].downcase) if params[:name]
+    return where(created_at: params[:created_at].to_datetime) if params[:created_at]
+    return where(updated_at: params[:updated_at].to_datetime) if params[:updated_at]
   end
 
   def self.top_by_revenue(n)

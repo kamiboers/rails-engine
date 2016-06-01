@@ -138,8 +138,8 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       create_invoice(2)
       invoice1 = Invoice.first
       invoice2 = Invoice.last
-      create_transaction(1, "cc_number", "complete", invoice1.id)
-      create_transaction(2, "cc_number", "pending", invoice2.id)
+      create_transaction(1, "credit_card_number", "complete", invoice1.id)
+      create_transaction(2, "credit_card_number", "pending", invoice2.id)
 
       get :transactions, id: invoice1.id
       invoice1_transactions = JSON.parse(response.body)["transactions"]

@@ -12,19 +12,23 @@ class Item < ActiveRecord::Base
   end
 
   def self.search(params)
-    return find(params[:id]).as_json if params[:id]
-    return where("lower(name) = ?", params[:name].downcase).first.as_json if params[:name]
-    return where("lower(description) like ?", "%" + params[:description].downcase + "%").first.as_json if params[:description]
-    return find_by(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
-    return find_by(unit_price: (params[:unit_price]).to_f*100).as_json if params[:unit_price]
+    return find(params[:id]) if params[:id]
+    return where("lower(name) = ?", params[:name].downcase).first if params[:name]
+    return where("lower(description) like ?", "%" + params[:description].downcase + "%").first if params[:description]
+    return find_by(merchant_id: params[:merchant_id]) if params[:merchant_id]
+    return find_by(unit_price: (params[:unit_price]).to_f*100) if params[:unit_price]
+    return find_by(created_at: params[:created_at].to_datetime) if params[:created_at]
+    return find_by(updated_at: params[:updated_at].to_datetime) if params[:updated_at]  
   end
 
    def self.search_all(params)
-    return find(params[:id]).as_json if params[:id]
-    return where("lower(name) = ?", params[:name].downcase).as_json if params[:name]
-    return where("lower(description) like ?", "%" + params[:description].downcase + "%").as_json if params[:description]
-    return where(merchant_id: params[:merchant_id]).as_json if params[:merchant_id]
-    return where(unit_price: (params[:unit_price]).to_f*100).as_json if params[:unit_price]
+    return find(params[:id]) if params[:id]
+    return where("lower(name) = ?", params[:name].downcase) if params[:name]
+    return where("lower(description) like ?", "%" + params[:description].downcase + "%") if params[:description]
+    return where(merchant_id: params[:merchant_id]) if params[:merchant_id]
+    return where(unit_price: (params[:unit_price]).to_f*100) if params[:unit_price]
+    return where(created_at: params[:created_at].to_datetime) if params[:created_at]
+    return where(updated_at: params[:updated_at].to_datetime) if params[:updated_at]
   end
 
   def self.top_by_revenue(n)

@@ -6,7 +6,7 @@ class Api::V1::TransactionsController < ApplicationController
   end
 
   def show
-    respond_with Transaction.find(params[:id])
+    respond_with Transaction.find_by(id: params[:id])
   end
 
   def random
@@ -14,16 +14,16 @@ class Api::V1::TransactionsController < ApplicationController
   end
 
   def find
-    render :json => {transaction: Transaction.search(params)}
+    render :json => Transaction.search(params)
   end
 
   def find_all
-    render :json => {transactions: Transaction.search_all(params)}
+    render :json => Transaction.search_all(params)
   end
 
   def invoice
     transaction = Transaction.find(params[:id])
-    render :json => {transaction: transaction, invoice: transaction.invoice}
+    render :json => transaction.invoice
   end
  
   # def create
@@ -41,7 +41,7 @@ class Api::V1::TransactionsController < ApplicationController
   # private
 
   # def item_params
-  #   params.require(:transaction).permit(:id, :invoice_id, :cc_number, :expiration, :result, :created_at, :updated_at)
+  #   params.require(:transaction).permit(:id, :invoice_id, :credit_card_number, :expiration, :result, :created_at, :updated_at)
   # end
 
 end

@@ -14,26 +14,26 @@ class Api::V1::CustomersController < ApplicationController
   end
 
   def find
-    render :json => {customer: Customer.search(params)}
+    render :json => Customer.search(params)
   end
 
   def find_all
-    render :json => {customers: Customer.search_all(params)}
+    render :json => Customer.search_all(params)
   end
 
   def invoices
     customer = Customer.find(params[:id])
-    render :json => {customer: customer, invoices: customer.invoices}
+    render :json => customer.invoices
   end
 
   def transactions
     customer = Customer.find(params[:id])
-    render :json => {customer: customer, transactions: customer.transactions}
+    render :json => customer.transactions
   end
 
   def favorite_merchant
     customer = Customer.find(params[:id])
-    render :json => {favorite_merchant: customer.favorite_merchant}
+    render :json => customer.favorite_merchant
   end
 
   # def create
