@@ -19,7 +19,7 @@ class Customer < ActiveRecord::Base
   end
 
   def self.search_all(params)
-    return find(params[:id]) if params[:id]
+    return [] << find(params[:id]) if params[:id]
     return where("lower(first_name) = ?", params[:first_name].downcase) if params[:first_name]
     return where("lower(last_name) = ?", params[:last_name].downcase) if params[:last_name]
     return where(created_at: params[:created_at].to_datetime) if params[:created_at]

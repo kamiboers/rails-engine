@@ -22,7 +22,7 @@ class Item < ActiveRecord::Base
   end
 
    def self.search_all(params)
-    return find(params[:id]) if params[:id]
+    return [] << find(params[:id]) if params[:id]
     return where("lower(name) = ?", params[:name].downcase) if params[:name]
     return where("lower(description) like ?", "%" + params[:description].downcase + "%") if params[:description]
     return where(merchant_id: params[:merchant_id]) if params[:merchant_id]

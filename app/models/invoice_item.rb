@@ -22,7 +22,7 @@ class InvoiceItem < ActiveRecord::Base
   end
 
   def self.search_all(params)
-    return find(params[:id]) if params[:id]
+    return [] << find(params[:id]) if params[:id]
     return where(quantity: params[:quantity]) if params[:quantity]
     return where(item_id: params[:item_id]) if params[:item_id]
     return where(invoice_id: params[:invoice_id]) if params[:invoice_id]

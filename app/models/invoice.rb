@@ -14,7 +14,7 @@ class Invoice < ActiveRecord::Base
 
   def self.search(params)
     return find(params[:id])if params[:id]
-    return where("lower(status) = ?", params[:status].downcase).firstif params[:status]
+    return where("lower(status) = ?", params[:status].downcase).first if params[:status]
     return find_by(customer_id: params[:customer_id])if params[:customer_id]
     return find_by(merchant_id: params[:merchant_id])if params[:merchant_id]
     return find_by(created_at: params[:created_at].to_datetime) if params[:created_at]
@@ -22,7 +22,7 @@ class Invoice < ActiveRecord::Base
   end
 
    def self.search_all(params)
-    return find(params[:id])if params[:id]
+    return [] << find(params[:id]) if params[:id]
     return where("lower(status) = ?", params[:status].downcase)if params[:status]
     return where(customer_id: params[:customer_id])if params[:customer_id]
     return where(merchant_id: params[:merchant_id])if params[:merchant_id]
