@@ -65,7 +65,6 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
     it "returns invoice_item with unit_price in search parameters" do
       create_invoice_item
       invoice_item = InvoiceItem.first
-
       get :find, unit_price: (invoice_item.unit_price/100.0).to_f.to_s
 
       assert_response :success

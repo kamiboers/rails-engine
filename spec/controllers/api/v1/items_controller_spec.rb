@@ -218,28 +218,28 @@ end
     end
   end
 
-  # describe "#most_items" do
-  #   it "returns the top x most successful items" do
-  #     fourth_ranked = create_item(1, "Fourth Place")
-  #     third_ranked = create_item(1, "Third Place")
-  #     second_ranked = create_item(1, "Second Place")
-  #     first_ranked = create_item(1, "First Place")
+  describe "#most_items" do
+    it "returns the top x most successful items" do
+      fourth_ranked = create_item(1, 1, "Fourth Ranked")
+      third_ranked = create_item(1, 1, "Third Ranked")
+      second_ranked = create_item(1, 1, "Second Ranked")
+      first_ranked = create_item(1, 1, "First Ranked")
 
-  #     allow(fourth_ranked).to receive(:number_sold).and_return(05)
-  #     allow(third_ranked).to receive(:number_sold).and_return(10)
-  #     allow(second_ranked).to receive(:number_sold).and_return(15)
-  #     allow(first_ranked).to receive(:number_sold).and_return(20)
+      allow(fourth_ranked).to receive(:number_sold).and_return(05)
+      allow(third_ranked).to receive(:number_sold).and_return(10)
+      allow(second_ranked).to receive(:number_sold).and_return(15)
+      allow(first_ranked).to receive(:number_sold).and_return(20)
 
-  #     get :most_items, quantity: 3
-  #     top_three = JSON.parse(response.body)["top_items"]
+      get :most_items, quantity: 3
+      top_three = JSON.parse(response.body)["top_items"]
 
 
-  #     expect(top_three.to_s).to include("First Ranked")
-  #     expect(top_three.to_s).to include("Second Ranked")
-  #     expect(top_three.to_s).to include("Third Ranked")
-  #     expect(top_three.to_s).not_to include("Fourth Ranked")
-  #   end
-  # end
+      expect(top_three.to_s).to include("First Ranked")
+      expect(top_three.to_s).to include("Second Ranked")
+      expect(top_three.to_s).to include("Third Ranked")
+      expect(top_three.to_s).not_to include("Fourth Ranked")
+    end
+  end
 
   #  describe "#best_day" do
   #   it "successfully returns specific item top sales day" do

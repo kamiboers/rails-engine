@@ -31,10 +31,17 @@ class Item < ActiveRecord::Base
     all.sort_by(&:revenue).reverse.first(n.to_i)
   end
 
+  def self.top_by_items_sold(n)
+    all.sort_by(&:number_sold).reverse.first(n.to_i)
+  end
 
   def revenue
     raw_revenue = invoice_items.joins(invoice: :transactions).where(transactions: {result: "success"}).sum("quantity * unit_price")
     raw_revenue/100.0
+  end
+
+  def number_sold
+    invoice_items.joins(invoice: :transactions).where(transactions: {result: "success"}).sum(:quantity)
   end
 
   def best_day
