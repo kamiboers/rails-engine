@@ -52,7 +52,8 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
     end
 
     it "returns transaction with credit_card_number in search parameters" do
-      transaction = create_transaction
+      create_transaction
+      transaction = Transaction.first
 
       get :find, invoice_id: transaction.invoice_id
 
@@ -113,8 +114,10 @@ end
 
   describe "#invoice" do
     it "successfully returns transaction's invoice data" do
-      invoice = create_invoice(1, "transaction invoice")
-      transaction = create_transaction(1, "credit_card_number", "result", invoice.id)
+      create_invoice(1, "transaction invoice")
+      invoice = Invoice.last
+      create_transaction(1, "credit_card_number", "result", invoice.id)
+      transaction = Transaction.last
 
       get :invoice, id: transaction.id
       transaction_invoice = JSON.parse(response.body)
