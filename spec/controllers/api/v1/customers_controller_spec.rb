@@ -26,7 +26,6 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
 
   describe "#random" do
     it "successfully returns random customer in database" do
-      VCR.use_cassette 'customer/random' do
         create_customer(8)
         id_array = Customer.pluck(:id)
         get :random, format: :json
@@ -37,7 +36,6 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
         assert_response :success
         expect(id_array).to include(customer1_id)
         expect(customer1_id).not_to eq(customer2_id)
-      end
     end
   end
 
