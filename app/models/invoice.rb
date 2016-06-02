@@ -9,7 +9,7 @@ class Invoice < ActiveRecord::Base
   has_many :items, through: :invoice_items
   has_many :transactions
 
-  scope :is_successful, -> { joins(transactions: {result: "success"}) }
+  scope :successful, -> { joins(transactions: {result: "success"}) }
 
   def self.successful(date=nil)
     successful = joins(:transactions).where(transactions: {result: "success"})

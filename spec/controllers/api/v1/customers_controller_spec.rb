@@ -41,10 +41,33 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
 
   describe "#find" do
     it "returns customer with id in search parameters" do
-      create_customer
-      customer = Customer.first
+      customer = create_customer
 
       get :find, id: customer.id
+
+      assert_response :success
+      expect(response.body).to include(customer.first_name)
+      expect(response.body).to include(customer.last_name)
+    end
+
+    it "returns customer with created_at in search parameters" do
+      customer = create_customer
+      date = "12/12/12".to_datetime
+      customer.update!(created_at: date)
+
+      get :find, created_at: date
+
+      assert_response :success
+      expect(response.body).to include(customer.first_name)
+      expect(response.body).to include(customer.last_name)
+    end
+    
+    it "returns customer with updated_at in search parameters" do
+      customer = create_customer
+      date = "12/12/12".to_datetime
+      customer.update!(updated_at: date)
+
+      get :find, updated_at: date
 
       assert_response :success
       expect(response.body).to include(customer.first_name)
@@ -119,6 +142,44 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
       expect(selected.count).to eq(2)
       expect(first_selected_name).to eq("Marshall")
       expect(last_selected_name).to eq("marSHALl")
+    end
+
+    it "returns all customers with created_at in search parameters" do
+      customer1 = create_customer(1, "included_first_name")
+      customer2 = create_customer(1, "other_included_first_name")
+      customer3 = create_customer(1, "excluded_first_name")
+
+      date = "12/12/12".to_datetime
+      customer1.update!(created_at: date)
+      customer2.update!(created_at: date)
+
+      get :find_all, created_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_first_name")
+      expect(results.to_s).to include("other_included_first_name")
+      expect(results.to_s).not_to include("excluded_first_name")
+    end
+    
+  it "returns all customers with updated_at in search parameters" do
+      customer1 = create_customer(1, "included_first_name")
+      customer2 = create_customer(1, "other_included_first_name")
+      customer3 = create_customer(1, "excluded_first_name")
+
+      date = "12/12/12".to_datetime
+      customer1.update!(updated_at: date)
+      customer2.update!(updated_at: date)
+
+      get :find_all, updated_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_first_name")
+      expect(results.to_s).to include("other_included_first_name")
+      expect(results.to_s).not_to include("excluded_first_name")
     end
   end
 

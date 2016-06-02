@@ -84,6 +84,31 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       assert_response :success
       expect(response.body).to include(invoice.id.to_s)
     end
+
+    it "returns invoice with created_at in search parameters" do
+      invoice = create_invoice(1, "fake_status")
+      date = "12/12/12".to_datetime
+      invoice.update!(created_at: date)
+
+      get :find, created_at: date
+
+      assert_response :success
+      expect(response.body).to include(invoice.id.to_s)
+      expect(response.body).to include("fake_status")
+    end
+    
+    it "returns invoice with updated_at in search parameters" do
+      invoice = create_invoice(1, "fake_status")
+      date = "12/12/12".to_datetime
+      invoice.update!(updated_at: date)
+
+      get :find, updated_at: date
+
+      assert_response :success
+      expect(response.body).to include(invoice.id.to_s)
+      expect(response.body).to include("fake_status")
+    end
+
   end
 
   describe "#find_all" do
@@ -130,6 +155,44 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       expect(selected.count).to eq(2)
       expect(first_selected_merchant_id).to eq(27)
       expect(last_selected_merchant_id).to eq(27)
+    end
+
+    it "returns returns all invoices with created_at in search parameters" do
+      invoice1 = create_invoice(1, "included_status")
+      invoice2 = create_invoice(1, "other_included_status")
+      invoice3 = create_invoice(1, "excluded_status")
+
+      date = "12/12/12".to_datetime
+      invoice1.update!(created_at: date)
+      invoice2.update!(created_at: date)
+
+      get :find_all, created_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_status")
+      expect(results.to_s).to include("other_included_status")
+      expect(results.to_s).not_to include("excluded_status")
+    end
+    
+    it "returns all invoices with updated_at in search parameters" do
+      invoice1 = create_invoice(1, "included_status")
+      invoice2 = create_invoice(1, "other_included_status")
+      invoice3 = create_invoice(1, "excluded_status")
+
+      date = "12/12/12".to_datetime
+      invoice1.update!(updated_at: date)
+      invoice2.update!(updated_at: date)
+
+      get :find_all, updated_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_status")
+      expect(results.to_s).to include("other_included_status")
+      expect(results.to_s).not_to include("excluded_status")
     end
   end
 

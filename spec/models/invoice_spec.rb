@@ -34,6 +34,30 @@ RSpec.describe Invoice, type: :model do
     expect(Invoice.paid.count).to eq(1)
   end
 
+  it "returns successful invoices from a group" do
+    invoice = create_invoice
+    transaction1 = create_transaction(1, "cc_number", "failed", invoice.id)
+    invoice1 = create_invoice
+    transaction2 = create_transaction(1, "cc_number", "success", invoice1.id)
+
+    expect(Invoice.successful).to eq([Invoice.find(invoice1.id)])
+    expect(Invoice.successful.count).to eq(1)
+  end
+
+  it "returns successful invoices from a group by date" do
+    invoice = create_invoice
+    transaction1 = create_transaction(1, "cc_number", "failed", invoice.id)
+    invoice1 = create_invoice
+    transaction2 = create_transaction(1, "cc_number", "success", invoice1.id)
+    invoice2 = create_invoice
+    transaction2 = create_transaction(1, "cc_number", "success", invoice2.id)
+    date = "12/12/12".to_datetime
+    invoice2.update!(created_at: date, updated_at: date)
+
+    expect(Invoice.successful.count).to eq(2)
+    expect(Invoice.successful(date).count).to eq(1)
+  end
+
   it "returns total of invoice_items if successful" do
     create_invoice
     invoice = Invoice.last

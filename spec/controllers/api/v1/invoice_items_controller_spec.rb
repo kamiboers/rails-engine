@@ -69,6 +69,31 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
       assert_response :success
       expect(response.body).to include(invoice_item.id.to_s)
   end
+
+  it "returns invoice_item with created_at in search parameters" do
+      invoice_item = create_invoice_item(1, 77777777)
+      date = "12/12/12".to_datetime
+      invoice_item.update!(created_at: date)
+
+      get :find, created_at: date
+
+      assert_response :success
+      expect(response.body).to include(invoice_item.id.to_s)
+      expect(response.body).to include("777777.77")
+    end
+    
+    it "returns invoice_item with updated_at in search parameters" do
+      invoice_item = create_invoice_item(1, 77777777)
+      date = "12/12/12".to_datetime
+      invoice_item.update!(updated_at: date)
+
+      get :find, updated_at: date
+
+      assert_response :success
+      expect(response.body).to include(invoice_item.id.to_s)
+      expect(response.body).to include("777777.77")
+    end
+
 end
 
   describe "#find_all" do
@@ -126,6 +151,44 @@ end
       expect(selected.first["invoice_id"]).to eq(99)
       expect(selected.last["invoice_id"]).to eq(99)
   end
+
+    it "returns all invoice_items with created_at in search parameters" do
+      invoice_item1 = create_invoice_item(1, 333333)
+      invoice_item2 = create_invoice_item(1, 444444)
+      invoice_item3 = create_invoice_item(1, 555555)
+
+      date = "12/12/12".to_datetime
+      invoice_item1.update!(created_at: date)
+      invoice_item2.update!(created_at: date)
+
+      get :find_all, created_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("3333.33")
+      expect(results.to_s).to include("4444.44")
+      expect(results.to_s).not_to include("5555.55")
+    end
+    
+  it "returns all invoice_items with updated_at in search parameters" do
+      invoice_item1 = create_invoice_item(1, 333333)
+      invoice_item2 = create_invoice_item(1, 444444)
+      invoice_item3 = create_invoice_item(1, 555555)
+
+      date = "12/12/12".to_datetime
+      invoice_item1.update!(updated_at: date)
+      invoice_item2.update!(updated_at: date)
+
+      get :find_all, updated_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("3333.33")
+      expect(results.to_s).to include("4444.44")
+      expect(results.to_s).not_to include("5555.55")
+    end
 end
 
   describe "#invoice" do

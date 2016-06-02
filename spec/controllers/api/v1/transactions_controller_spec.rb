@@ -60,6 +60,31 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
       assert_response :success
       expect(response.body).to include(transaction.id.to_s)
   end
+
+    it "returns transaction with created_at in search parameters" do
+      transaction = create_transaction(1, "4444444444444444")
+      date = "12/12/12".to_datetime
+      transaction.update!(created_at: date)
+
+      get :find, created_at: date
+
+      assert_response :success
+      expect(response.body).to include(transaction.id.to_s)
+      expect(response.body).to include("4444444444444444")
+    end
+    
+    it "returns transaction with updated_at in search parameters" do
+      transaction = create_transaction(1, "8888888888888888")
+      date = "12/12/12".to_datetime
+      transaction.update!(updated_at: date)
+
+      get :find, updated_at: date
+
+      assert_response :success
+      expect(response.body).to include(transaction.id.to_s)
+      expect(response.body).to include("8888888888888888")
+    end
+
 end
 
   describe "#find_all" do
@@ -109,6 +134,44 @@ end
       expect(selected.count).to eq(2)
       expect(first_selected_invoice_id).to eq(6)
       expect(last_selected_invoice_id).to eq(6)
+    end
+
+    it "returns all transactions with created_at in search parameters" do
+      transaction1 = create_transaction(1, "included_cc_number")
+      transaction2 = create_transaction(1, "other_included_cc_number")
+      transaction3 = create_transaction(1, "excluded_cc_number")
+
+      date = "12/12/12".to_datetime
+      transaction1.update!(created_at: date)
+      transaction2.update!(created_at: date)
+
+      get :find_all, created_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_cc_number")
+      expect(results.to_s).to include("other_included_cc_number")
+      expect(results.to_s).not_to include("excluded_cc_number")
+    end
+    
+  it "returns all transactions with updated_at in search parameters" do
+      transaction1 = create_transaction(1, "included_cc_number")
+      transaction2 = create_transaction(1, "other_included_cc_number")
+      transaction3 = create_transaction(1, "excluded_cc_number")
+
+      date = "12/12/12".to_datetime
+      transaction1.update!(updated_at: date)
+      transaction2.update!(updated_at: date)
+
+      get :find_all, updated_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_cc_number")
+      expect(results.to_s).to include("other_included_cc_number")
+      expect(results.to_s).not_to include("excluded_cc_number")
     end
 end
 

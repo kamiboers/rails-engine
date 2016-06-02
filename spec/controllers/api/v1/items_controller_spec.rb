@@ -99,6 +99,31 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
       expect(selected["id"]).to eq(item.id)
       expect(selected["name"]).to eq("Merchant's Item")
   end
+
+  it "returns item with created_at in search parameters" do
+    item = create_item
+    date = "12/12/12".to_datetime
+    item.update!(created_at: date)
+
+    get :find, created_at: date
+
+    assert_response :success
+    expect(response.body).to include(item.id.to_s)
+    expect(response.body).to include(item.name)
+  end
+    
+  it "returns item with updated_at in search parameters" do
+    item = create_item
+    date = "12/12/12".to_datetime
+    item.update!(updated_at: date)
+
+    get :find, updated_at: date
+
+    assert_response :success
+    expect(response.body).to include(item.id.to_s)
+    expect(response.body).to include(item.name)
+  end
+
 end
 
 describe "#find_all" do
@@ -160,6 +185,44 @@ describe "#find_all" do
       expect(selected.count).to eq(2)
       expect(first_selected_merchant_id).to eq(99)
       expect(last_selected_merchant_id).to eq(99)
+    end
+
+       it "returns returns all items with created_at in search parameters" do
+      item1 = create_item(1, 1, "included_name")
+      item2 = create_item(1, 1, "other_included_name")
+      item3 = create_item(1, 1, "excluded_name")
+
+      date = "12/12/12".to_datetime
+      item1.update!(created_at: date)
+      item2.update!(created_at: date)
+
+      get :find_all, created_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_name")
+      expect(results.to_s).to include("other_included_name")
+      expect(results.to_s).not_to include("excluded_name")
+    end
+    
+    it "returns all items with updated_at in search parameters" do
+      item1 = create_item(1, 1, "included_name")
+      item2 = create_item(1, 1, "other_included_name")
+      item3 = create_item(1, 1, "excluded_name")
+
+      date = "12/12/12".to_datetime
+      item1.update!(updated_at: date)
+      item2.update!(updated_at: date)
+
+      get :find_all, updated_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_name")
+      expect(results.to_s).to include("other_included_name")
+      expect(results.to_s).not_to include("excluded_name")
     end
 end
 

@@ -57,6 +57,31 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
       assert_response :success
       expect(response.body).to include(merchant.id.to_s)
     end
+
+    it "returns merchant with created_at in search parameters" do
+      merchant = create_merchant
+      date = "12/12/12".to_datetime
+      merchant.update!(created_at: date)
+
+      get :find, created_at: date
+
+      assert_response :success
+      expect(response.body).to include(merchant.id.to_s)
+      expect(response.body).to include(merchant.name)
+    end
+    
+    it "returns merchant with updated_at in search parameters" do
+      merchant = create_merchant
+      date = "12/12/12".to_datetime
+      merchant.update!(updated_at: date)
+
+      get :find, updated_at: date
+
+      assert_response :success
+      expect(response.body).to include(merchant.id.to_s)
+      expect(response.body).to include(merchant.name)
+    end
+
   end
 
   describe "#find_all" do
@@ -87,6 +112,45 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
       assert_response :success
       expect(selected.count).to eq(2)
     end
+
+    it "returns all merchants with created_at in search parameters" do
+      merchant1 = create_merchant(1, "included_name")
+      merchant2 = create_merchant(1, "other_included_name")
+      merchant3 = create_merchant(1, "excluded_name")
+
+      date = "12/12/12".to_datetime
+      merchant1.update!(created_at: date)
+      merchant2.update!(created_at: date)
+
+      get :find_all, created_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_name")
+      expect(results.to_s).to include("other_included_name")
+      expect(results.to_s).not_to include("excluded_name")
+    end
+    
+  it "returns all merchants with updated_at in search parameters" do
+      merchant1 = create_merchant(1, "included_name")
+      merchant2 = create_merchant(1, "other_included_name")
+      merchant3 = create_merchant(1, "excluded_name")
+
+      date = "12/12/12".to_datetime
+      merchant1.update!(updated_at: date)
+      merchant2.update!(updated_at: date)
+
+      get :find_all, updated_at: date
+      results = JSON.parse(response.body)
+
+      assert_response :success
+      expect(results.count).to eq(2)
+      expect(results.to_s).to include("included_name")
+      expect(results.to_s).to include("other_included_name")
+      expect(results.to_s).not_to include("excluded_name")
+    end
+
   end
 
   describe "#items" do
@@ -159,7 +223,6 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
 
       get :most_items, quantity: 3
       top_three = JSON.parse(response.body)
-
 
       expect(top_three.to_s).to include("First Ranked")
       expect(top_three.to_s).to include("Second Ranked")
