@@ -14,48 +14,52 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def find
-    render :json => { merchant: Merchant.search(params) }
+    render :json => Merchant.search(params)
   end
 
   def find_all
-    render :json => { merchants: Merchant.search_all(params) }
+    render :json => Merchant.search_all(params)
   end
 
   def items
     merchant = Merchant.find(params[:id])
-    render :json => { merchant: merchant, items: merchant.items }
+    render :json => merchant.items
   end
 
   def invoices
     merchant = Merchant.find(params[:id])
-    render :json => { merchant: merchant, invoices: merchant.invoices }
+    render :json => merchant.invoices
   end
 
   def most_revenue
-    render :json => { top_merchants: Merchant.top_by_revenue(params[:quantity]) }
+    render :json => Merchant.top_by_revenue(params[:quantity])
   end
  
   def most_items
-    render :json => { top_merchants: Merchant.top_by_item_count(params[:quantity]) }
+    render :json => Merchant.top_by_item_count(params[:quantity])
   end
 
   def all_revenue
-    render :json => { date_revenue: Merchant.revenue_by_date(params[:date]) }
+    render :json => {total_revenue: (Merchant.revenue_by_date(params[:date]).to_s)}
   end
 
   def revenue
     merchant = Merchant.find(params[:id])
-    params[:date] ? (render :json => { revenue: merchant.revenue_by_date(params[:date]) }) : (render :json => { revenue: merchant.sales })
+    if params[:date] 
+      render :json => {revenue: (merchant.revenue_by_date(params[:date]).to_s)}
+    else
+      render :json => {revenue: merchant.sales.to_s}
+    end
   end
 
   def favorite_customer
     merchant = Merchant.find(params[:id])
-    render :json => { favorite_customer: merchant.favorite_customer }
+    render :json => merchant.favorite_customer
   end
 
   def customers_with_pending_invoices
     merchant = Merchant.find(params[:id])
-    render :json => { pending_customers: merchant.customers_with_pending_invoices }
+    render :json => merchant.customers_with_pending_invoices
   end
   
 

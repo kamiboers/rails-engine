@@ -14,34 +14,34 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def find
-    render :json => {item: Item.search(params)}
+    render :json => Item.search(params)
   end
 
   def find_all
-    render :json => {items: Item.search_all(params)}
+    render :json => Item.search_all(params)
   end
 
   def invoice_items
     item = Item.find(params[:id])
-    render :json => {item: item, invoice_items: item.invoice_items}
+    render :json => item.invoice_items
   end
 
   def merchant
     item = Item.find(params[:id])
-    render :json => {item: item, merchant: item.merchant}
+    render :json => item.merchant
   end
 
   def most_revenue
-    render :json => {top_items: Item.top_by_revenue(params[:quantity])}
+    render :json => Item.top_by_revenue(params[:quantity])
   end
 
   def most_items
-    render :json => {top_items: Item.top_by_items_sold(params[:quantity])}
+    render :json => Item.top_by_items_sold(params[:quantity])
   end
 
   def best_day
     item = Item.find(params[:id])
-    render :json => {best_day: item.best_day}
+    render :json => { best_day: item.best_day }
   end
 
   # def create

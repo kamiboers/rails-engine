@@ -67,7 +67,7 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
       item = Item.last
 
       get :find, description: "totes"
-      selected = JSON.parse(response.body)["item"]
+      selected = JSON.parse(response.body)
 
       assert_response :success
       expect(selected["id"]).to eq(item.id)
@@ -80,7 +80,7 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
       item = Item.last
 
       get :find, unit_price: 4321.12
-      selected = JSON.parse(response.body)["item"]
+      selected = JSON.parse(response.body)
 
       assert_response :success
       expect(selected["id"]).to eq(item.id)
@@ -93,7 +93,7 @@ RSpec.describe Api::V1::ItemsController, type: :controller do
       item = Item.last
 
       get :find, merchant_id: 87
-      selected = JSON.parse(response.body)["item"]
+      selected = JSON.parse(response.body)
 
       assert_response :success
       expect(selected["id"]).to eq(item.id)
@@ -107,15 +107,15 @@ describe "#find_all" do
       create_item(2, 1, "name", "description", 12275)
       
       get :find_all, unit_price: 122.75
-      selected = JSON.parse(response.body)["items"]
+      selected = JSON.parse(response.body)
 
       first_selected_price = selected.first["unit_price"]
       last_selected_price = selected.last["unit_price"]
 
       assert_response :success
       expect(selected.count).to eq(2)
-      expect(first_selected_price).to eq(12275)
-      expect(last_selected_price).to eq(12275)
+      expect(first_selected_price).to eq("122.75")
+      expect(last_selected_price).to eq("122.75")
     end
 
     it "returns all items with name in search parameters" do
@@ -123,7 +123,7 @@ describe "#find_all" do
       create_item(2, 1, "Smelloscope", "description", 12275)
       
       get :find_all, name: "SmellOSCOPe"
-      selected = JSON.parse(response.body)["items"]
+      selected = JSON.parse(response.body)
 
       first_selected_name = selected.first["name"]
       last_selected_name = selected.last["name"]
@@ -139,7 +139,7 @@ describe "#find_all" do
       create_item(2, 1, "name", "other description", 10)
       
       get :find_all, description: "description"
-      selected = JSON.parse(response.body)["items"]
+      selected = JSON.parse(response.body)
       first_selected_description = selected.first["description"]
       last_selected_description = selected.last["description"]
 
@@ -152,7 +152,7 @@ describe "#find_all" do
       create_item(2, 99, "name", "other description", 10)
       
       get :find_all, merchant_id: 99
-      selected = JSON.parse(response.body)["items"]
+      selected = JSON.parse(response.body)
       first_selected_merchant_id = selected.first["merchant_id"]
       last_selected_merchant_id = selected.last["merchant_id"]
 
@@ -171,12 +171,12 @@ end
       create_invoice_item(1, 7447, 9, item.id)
 
       get :invoice_items, id: item.id
-      item_invoice_items = JSON.parse(response.body)["invoice_items"]
+      item_invoice_items = JSON.parse(response.body)
 
       assert_response :success
       expect(item_invoice_items.count).to eq(2)
-      expect(item_invoice_items.to_s).to include("6996")
-      expect(item_invoice_items.to_s).to include("7447")
+      expect(item_invoice_items.to_s).to include("69.96")
+      expect(item_invoice_items.to_s).to include("74.47")
     end
   end
 
@@ -188,7 +188,7 @@ end
       item = Item.last
 
       get :merchant, id: item.id
-      item_merchant = JSON.parse(response.body)["merchant"]
+      item_merchant = JSON.parse(response.body)
 
       assert_response :success
       expect(item_merchant.to_s).to include("T-Pain")
@@ -208,7 +208,7 @@ end
       allow(first_ranked).to receive(:revenue).and_return(20)
 
       get :most_revenue, quantity: 3
-      top_three = JSON.parse(response.body)["top_items"]
+      top_three = JSON.parse(response.body)
 
 
       expect(top_three.to_s).to include("First Ranked")
@@ -231,7 +231,7 @@ end
       allow(first_ranked).to receive(:number_sold).and_return(20)
 
       get :most_items, quantity: 3
-      top_three = JSON.parse(response.body)["top_items"]
+      top_three = JSON.parse(response.body)
 
 
       expect(top_three.to_s).to include("First Ranked")
@@ -246,13 +246,15 @@ end
       item = create_item
       invoice1 = create_invoice
       invoice2 = create_invoice
-      date = Date.parse("07/07/07")
+      date = "07/07/2007".to_datetime
+      invoice2.update!(created_at: date, updated_at: date)
 
       invoice_item1 = create_invoice_item(1, item.unit_price, 1, item.id, invoice1.id)
       invoice_item2 = create_invoice_item(1, item.unit_price, 10, item.id, invoice2.id)
       invoice_item2.update(created_at: date, updated_at: date)
-      create_transaction(1, "cc_number", "success", invoice1.id)
-      create_transaction(1, "cc_number", "success", invoice2.id)
+      create_transaction(1, "credit_card_number", "success", invoice1.id)
+      create_transaction(1, "credit_card_number", "success", invoice2.id)
+
 
       get :best_day, id: item.id
       best_day = Date.parse(JSON.parse(response.body)["best_day"])

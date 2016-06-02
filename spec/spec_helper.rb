@@ -128,9 +128,9 @@ def create_invoice(n=1, status="shipped", customer_id=1, merchant_id=1)
   Invoice.last
 end
 
-def create_transaction(n=1, cc_number=rand(1111111111111111..9999999999999999).to_s, result="resultat", invoice_id=1)
+def create_transaction(n=1, credit_card_number=rand(1111111111111111..9999999999999999).to_s, result="resultat", invoice_id=1)
   n.times do
-    Transaction.create(cc_number: cc_number, result: result, invoice_id: invoice_id)
+    Transaction.create(credit_card_number: credit_card_number, result: result, invoice_id: invoice_id)
   end
   Transaction.last
 end

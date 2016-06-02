@@ -47,13 +47,12 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
       get :find, id: transaction.id
 
       assert_response :success
-      expect(response.body).to include(transaction.cc_number)
+      expect(response.body).to include(transaction.credit_card_number)
       expect(response.body).to include(transaction.result)
     end
 
-    it "returns transaction with cc_number in search parameters" do
-      create_transaction
-      transaction = Transaction.first
+    it "returns transaction with credit_card_number in search parameters" do
+      transaction = create_transaction
 
       get :find, invoice_id: transaction.invoice_id
 
@@ -63,15 +62,15 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
 end
 
   describe "#find_all" do
-    it "returns all transactions with cc_number in search parameters" do
+    it "returns all transactions with credit_card_number in search parameters" do
       create_transaction(1, "4242424242424242")
       create_transaction(2, "1212121212121212")
       
-      get :find_all, cc_number: "1212121212121212"
-      selected = JSON.parse(response.body)["transactions"]
+      get :find_all, credit_card_number: "1212121212121212"
+      selected = JSON.parse(response.body)
 
-      first_selected_cc = selected.first["cc_number"]
-      last_selected_cc = selected.last["cc_number"]
+      first_selected_cc = selected.first["credit_card_number"]
+      last_selected_cc = selected.last["credit_card_number"]
 
       assert_response :success
       expect(selected.count).to eq(2)
@@ -84,7 +83,7 @@ end
       create_transaction(2, "4242424242424242", "cancelled")
       
       get :find_all, result: "cancelled"
-      selected = JSON.parse(response.body)["transactions"]
+      selected = JSON.parse(response.body)
 
       first_selected_result = selected.first["result"]
       last_selected_result = selected.last["result"]
@@ -100,7 +99,7 @@ end
       create_transaction(2, "4242424242424242", "paid", 6)
       
       get :find_all, invoice_id: 6
-      selected = JSON.parse(response.body)["transactions"]
+      selected = JSON.parse(response.body)
 
       first_selected_invoice_id = selected.first["invoice_id"]
       last_selected_invoice_id = selected.last["invoice_id"]
@@ -114,13 +113,11 @@ end
 
   describe "#invoice" do
     it "successfully returns transaction's invoice data" do
-      create_invoice(1, "transaction invoice")
-      invoice = Invoice.last
-      create_transaction(1, "cc_number", "result", invoice.id)
-      transaction = Transaction.last
+      invoice = create_invoice(1, "transaction invoice")
+      transaction = create_transaction(1, "credit_card_number", "result", invoice.id)
 
       get :invoice, id: transaction.id
-      transaction_invoice = JSON.parse(response.body)["invoice"]
+      transaction_invoice = JSON.parse(response.body)
 
       assert_response :success
       expect(transaction_invoice.to_s).to include("transaction invoice")
@@ -131,12 +128,12 @@ end
 #   it "successfully creates an transaction" do
 #     assert_equal 0, Transaction.count
 
-#     transaction_params = { cc_number: "Computer", description: "awesome computer" }
+#     transaction_params = { credit_card_number: "Computer", description: "awesome computer" }
 #     post :create, transaction: transaction_params, format: :json
 #     transaction = Transaction.last
 
 #     assert_response :success
-#     assert_equal transaction.cc_number, transaction_params[:cc_number]
+#     assert_equal transaction.credit_card_number, transaction_params[:credit_card_number]
 #     assert_equal 1, Transaction.count
 #   end
 # end
@@ -145,15 +142,15 @@ end
 #   it "successfully updates an transaction" do
 #     create_transaction
 #     id = Transaction.first.id
-#     previous_cc_number = Transaction.first.cc_number
-#     transaction_params = { cc_number: "1234567876543218" }
+#     previous_credit_card_number = Transaction.first.credit_card_number
+#     transaction_params = { credit_card_number: "1234567876543218" }
 
 #     put :update, id: id, transaction: transaction_params, format: :json
 #     transaction = Transaction.find_by(id: id)
 
 #     assert_response :success
-#     refute_equal previous_cc_number, transaction.cc_number
-#     assert_equal "1234567876543218", transaction.cc_number
+#     refute_equal previous_credit_card_number, transaction.credit_card_number
+#     assert_equal "1234567876543218", transaction.credit_card_number
 #   end
 # end
 
