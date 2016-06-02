@@ -1,12 +1,23 @@
 class Invoice < ActiveRecord::Base
+  validates :status, presence: true
+  validates :customer_id, presence: true
+  validates :merchant_id, presence: true
+  
   belongs_to :merchant
   belongs_to :customer
   has_many :invoice_items
   has_many :items, through: :invoice_items
   has_many :transactions
-  validates :status, presence: true
-  validates :customer_id, presence: true
-  validates :merchant_id, presence: true
+
+  scope :is_successful, -> { joins(transactions: {result: "success"}) }
+
+  def self.successful(date=nil)
+    successful = joins(:transactions).where(transactions: {result: "success"})
+    if date
+      successful = successful.where(created_at: date)
+    end
+    successful
+  end
 
   def self.random
     offset(rand(Invoice.count)).first

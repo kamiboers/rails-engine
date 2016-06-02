@@ -41,7 +41,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def best_day
     item = Item.find(params[:id])
-    render :json => item.best_day
+    render :json => { best_day: item.best_day }
   end
 
   # def create

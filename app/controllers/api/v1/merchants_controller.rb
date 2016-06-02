@@ -40,15 +40,15 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def all_revenue
-    render :json => Merchant.revenue_by_date(params[:date])
+    render :json => {total_revenue: (Merchant.revenue_by_date(params[:date]).to_s)}
   end
 
   def revenue
     merchant = Merchant.find(params[:id])
     if params[:date] 
-      render :json => merchant.revenue_by_date(params[:date])
+      render :json => {revenue: (merchant.revenue_by_date(params[:date]).to_s)}
     else
-      render :json => merchant.sales
+      render :json => {revenue: merchant.sales.to_s}
     end
   end
 
