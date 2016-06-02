@@ -9,8 +9,8 @@ RSpec.describe Merchant, type: :model do
     merchant = Merchant.first
     create_invoice(1, "shipped", 1, merchant.id)
     invoice = Invoice.first
-    create_invoice_item(1, 50, 2, 1, invoice.id)
-    create_invoice_item(1, 100, 2, 1, invoice.id)
+    create_invoice_item(1, 5000, 2, 1, invoice.id)
+    create_invoice_item(1, 10000, 2, 1, invoice.id)
     create_transaction(1, "cc", "success", invoice.id)
 
     expect(merchant.sales).to eq(300)
@@ -21,8 +21,8 @@ RSpec.describe Merchant, type: :model do
     merchant = Merchant.first
     create_invoice(1, "shipped", 1, merchant.id)
     invoice = Invoice.first
-    create_invoice_item(1, 50, 2, 1, invoice.id)
-    create_invoice_item(1, 100, 2, 1, invoice.id)
+    create_invoice_item(1, 5000, 2, 1, invoice.id)
+    create_invoice_item(1, 10000, 2, 1, invoice.id)
     create_transaction(1, "cc", "failed", invoice.id)
 
     expect(merchant.sales).to eq(0)
@@ -73,42 +73,35 @@ RSpec.describe Merchant, type: :model do
   it "returns all merchants' revenue by date of transaction" do
     merchant1 = create_merchant
     merchant2 = create_merchant
-    today = (Date.today)
+    date = "12/12/12".to_datetime
 
     invoice1 = create_invoice(1, "shipped", 1, merchant1.id)
-    create_invoice_item(1, 20, 20, 1, invoice1.id)
+    create_invoice_item(1, 2000, 20, 1, invoice1.id)
     create_transaction(1, "cc_number", "success", invoice1.id)
-    invoice1.update(created_at: today, updated_at: today)
+    invoice1.update(created_at: date, updated_at: date)
 
     invoice2 = create_invoice(1, "shipped", 1, merchant2.id)
-    create_invoice_item(1, 30, 30, 1, invoice2.id)
+    create_invoice_item(1, 3000, 30, 1, invoice2.id)
     create_transaction(1, "cc_number", "success", invoice2.id)
-    invoice2.update(created_at: today, updated_at: today)
+    invoice2.update(created_at: date, updated_at: date)
 
-    today_str = (Time.now.utc).strftime("%m/%d/%Y")
-    yesterday_str = ((Time.now - 1.day).utc).strftime("%m/%d/%Y")
+    revenue_today = Merchant.revenue_by_date(date)
+    revenue_yesterday = Merchant.revenue_by_date(date-1.day)
 
-    revenue_today = Merchant.revenue_by_date(today_str)
-    revenue_yesterday = Merchant.revenue_by_date(yesterday_str)
-# binding.pry
     expect(revenue_today).to eq(1300)
     expect(revenue_yesterday).to eq(0)
   end
 
   it "returns merchant revenue by date of transaction" do
-    create_merchant
-    merchant = Merchant.last
-    create_invoice(1, "shipped", 1, merchant.id)
-    invoice = Invoice.last
-    create_invoice_item(1, 20, 20, 1, invoice.id)
+    merchant = create_merchant
+    invoice = create_invoice(1, "shipped", 1, merchant.id)
+    date = "03/03/03".to_datetime
+    invoice.update!(created_at: date, updated_at: date)
+    create_invoice_item(1, 2000, 20, 1, invoice.id)
     create_transaction(1, "cc_number", "success", invoice.id)
 
-    today_str = (Time.now.utc).strftime("%m/%d/%Y")
-    yesterday_str = ((Time.now - 1.day).utc).strftime("%m/%d/%Y")
-
-
-    revenue_today = merchant.revenue_by_date(today_str)
-    revenue_yesterday = merchant.revenue_by_date(yesterday_str)
+    revenue_today = merchant.revenue_by_date(date)
+    revenue_yesterday = merchant.revenue_by_date(date-1.day)
 
     expect(revenue_today).to eq(400)
     expect(revenue_yesterday).to eq(0)

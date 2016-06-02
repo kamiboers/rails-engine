@@ -44,12 +44,12 @@ RSpec.describe Api::V1::InvoiceItemsController, type: :controller do
     it "returns invoice_item with id in search parameters" do
       create_invoice_item
       invoice_item = InvoiceItem.first
-      
       get :find, id: invoice_item.id
 
       assert_response :success
+      expect(response.body).to include(invoice_item.id.to_s)
       expect(response.body).to include(invoice_item.quantity.to_s)
-      expect(response.body).to include((invoice_item.unit_price).to_s)
+      expect(response.body).to include((invoice_item.unit_price/100.0).to_s)
     end
 
     it "returns invoice_item with credit_card_number in search parameters" do
@@ -77,15 +77,15 @@ end
       create_invoice_item(2, 1275)
       
       get :find_all, unit_price: 12.75
-      selected = JSON.parse(response.body)["invoice_items"]
+      selected = JSON.parse(response.body)
 
       first_selected_price = selected.first["unit_price"]
       last_selected_price = selected.last["unit_price"]
 
       assert_response :success
       expect(selected.count).to eq(2)
-      expect(first_selected_price).to eq(1275)
-      expect(last_selected_price).to eq(1275)
+      expect(first_selected_price).to eq(12.75.to_s)
+      expect(last_selected_price).to eq(12.75.to_s)
     end
 
     it "returns all invoice_items with quantity in search parameters regardless of case" do
@@ -93,7 +93,7 @@ end
       create_invoice_item(2, 12.50, 16)
 
       get :find_all, quantity: 16
-      selected = JSON.parse(response.body)["invoice_items"]
+      selected = JSON.parse(response.body)
       
       assert_response :success
       expect(selected.count).to eq(2)
@@ -106,7 +106,7 @@ end
       create_invoice_item(2, 12.50, 3, 17)
 
       get :find_all, item_id: 17
-      selected = JSON.parse(response.body)["invoice_items"]
+      selected = JSON.parse(response.body)
       
       assert_response :success
       expect(selected.count).to eq(2)
@@ -119,7 +119,7 @@ end
       create_invoice_item(2, 12.50, 3, 5, 99)
 
       get :find_all, invoice_id: 99
-      selected = JSON.parse(response.body)["invoice_items"]
+      selected = JSON.parse(response.body)
       
       assert_response :success
       expect(selected.count).to eq(2)
@@ -136,7 +136,7 @@ end
       invoice_item = InvoiceItem.last
 
       get :invoice, id: invoice_item.id
-      invoice_item_invoice = JSON.parse(response.body)["invoice"]
+      invoice_item_invoice = JSON.parse(response.body)
 
       assert_response :success
       expect(invoice_item_invoice.to_s).to include("arbitrary status")
@@ -151,7 +151,7 @@ end
       invoice_item = InvoiceItem.last
 
       get :item, id: invoice_item.id
-      invoice_item_item = JSON.parse(response.body)["item"]
+      invoice_item_item = JSON.parse(response.body)
 
       assert_response :success
       expect(invoice_item_item.to_s).to include("II's Item")

@@ -92,7 +92,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       create_invoice(2, "pending")
 
       get :find_all, status: "PENDING"
-      selected = JSON.parse(response.body)["invoices"]
+      selected = JSON.parse(response.body)
       first_selected_status = selected.first["status"]
       last_selected_status = selected.last["status"]
 
@@ -107,7 +107,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       create_invoice(2, 5.00, 6)
 
       get :find_all, customer_id: 6
-      selected = JSON.parse(response.body)["invoices"]
+      selected = JSON.parse(response.body)
       first_selected_customer_id = selected.first["customer_id"]
       last_selected_customer_id = selected.last["customer_id"]
 
@@ -122,7 +122,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       create_invoice(2, 5.00, 5, 27)
 
       get :find_all, merchant_id: 27
-      selected = JSON.parse(response.body)["invoices"]
+      selected = JSON.parse(response.body)
       first_selected_merchant_id = selected.first["merchant_id"]
       last_selected_merchant_id = selected.last["merchant_id"]
 
@@ -142,9 +142,9 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       create_transaction(2, "credit_card_number", "pending", invoice2.id)
 
       get :transactions, id: invoice1.id
-      invoice1_transactions = JSON.parse(response.body)["transactions"]
+      invoice1_transactions = JSON.parse(response.body)
       get :transactions, id: invoice2.id
-      invoice2_transactions = JSON.parse(response.body)["transactions"]
+      invoice2_transactions = JSON.parse(response.body)
 
       assert_response :success
       expect(invoice1_transactions.count).to eq(1)
@@ -163,15 +163,15 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       create_invoice_item(2, 2077, 2, 3, invoice2.id)
 
       get :invoice_items, id: invoice1.id
-      invoice1_invoice_items = JSON.parse(response.body)["invoice_items"]
+      invoice1_invoice_items = JSON.parse(response.body)
       get :invoice_items, id: invoice2.id
-      invoice2_invoice_items = JSON.parse(response.body)["invoice_items"]
+      invoice2_invoice_items = JSON.parse(response.body)
 
       assert_response :success
       expect(invoice1_invoice_items.count).to eq(1)
-      expect(invoice1_invoice_items.to_s).to include("1099")
+      expect(invoice1_invoice_items.to_s).to include("10.99")
       expect(invoice2_invoice_items.count).to eq(2)
-      expect(invoice2_invoice_items.to_s).to include("2077")
+      expect(invoice2_invoice_items.to_s).to include("20.77")
     end
   end
 
@@ -188,7 +188,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       create_invoice_item(1, 10000, 3, item2.id, invoice.id)
 
       get :items, id: invoice.id
-      found_invoice_items = JSON.parse(response.body)["items"]
+      found_invoice_items = JSON.parse(response.body)
 
       assert_response :success
       expect(found_invoice_items.count).to eq(2)
@@ -209,9 +209,9 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       invoice2 = Invoice.last
 
       get :customer, id: invoice1.id
-      invoice1_customer = JSON.parse(response.body)["customer"]
+      invoice1_customer = JSON.parse(response.body)
       get :customer, id: invoice2.id
-      invoice2_customer = JSON.parse(response.body)["customer"]
+      invoice2_customer = JSON.parse(response.body)
 
       assert_response :success
       expect(invoice1_customer.to_s).to include("John")
@@ -231,9 +231,9 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       invoice2 = Invoice.last
 
       get :merchant, id: invoice1.id
-      invoice1_merchant = JSON.parse(response.body)["merchant"]
+      invoice1_merchant = JSON.parse(response.body)
       get :merchant, id: invoice2.id
-      invoice2_merchant = JSON.parse(response.body)["merchant"]
+      invoice2_merchant = JSON.parse(response.body)
 
       assert_response :success
       expect(invoice1_merchant.to_s).to include("MEGATRON")

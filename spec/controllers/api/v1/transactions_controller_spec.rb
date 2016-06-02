@@ -52,8 +52,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
     end
 
     it "returns transaction with credit_card_number in search parameters" do
-      create_transaction
-      transaction = Transaction.first
+      transaction = create_transaction
 
       get :find, invoice_id: transaction.invoice_id
 
@@ -68,7 +67,7 @@ end
       create_transaction(2, "1212121212121212")
       
       get :find_all, credit_card_number: "1212121212121212"
-      selected = JSON.parse(response.body)["transactions"]
+      selected = JSON.parse(response.body)
 
       first_selected_cc = selected.first["credit_card_number"]
       last_selected_cc = selected.last["credit_card_number"]
@@ -84,7 +83,7 @@ end
       create_transaction(2, "4242424242424242", "cancelled")
       
       get :find_all, result: "cancelled"
-      selected = JSON.parse(response.body)["transactions"]
+      selected = JSON.parse(response.body)
 
       first_selected_result = selected.first["result"]
       last_selected_result = selected.last["result"]
@@ -100,7 +99,7 @@ end
       create_transaction(2, "4242424242424242", "paid", 6)
       
       get :find_all, invoice_id: 6
-      selected = JSON.parse(response.body)["transactions"]
+      selected = JSON.parse(response.body)
 
       first_selected_invoice_id = selected.first["invoice_id"]
       last_selected_invoice_id = selected.last["invoice_id"]
@@ -114,13 +113,11 @@ end
 
   describe "#invoice" do
     it "successfully returns transaction's invoice data" do
-      create_invoice(1, "transaction invoice")
-      invoice = Invoice.last
-      create_transaction(1, "credit_card_number", "result", invoice.id)
-      transaction = Transaction.last
+      invoice = create_invoice(1, "transaction invoice")
+      transaction = create_transaction(1, "credit_card_number", "result", invoice.id)
 
       get :invoice, id: transaction.id
-      transaction_invoice = JSON.parse(response.body)["invoice"]
+      transaction_invoice = JSON.parse(response.body)
 
       assert_response :success
       expect(transaction_invoice.to_s).to include("transaction invoice")

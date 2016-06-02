@@ -76,7 +76,7 @@ end
       create_customer(2, "Steve", "McSteve")
       
       get :find_all, first_name: "Steve"
-      selected = JSON.parse(response.body)["customers"]
+      selected = JSON.parse(response.body)
 
       first_selected_name = selected.first["first_name"]
       last_selected_name = selected.last["first_name"]
@@ -93,7 +93,7 @@ end
       create_customer(1, "Blue")
 
       get :find_all, first_name: "steve"
-      selected = JSON.parse(response.body)["customers"]
+      selected = JSON.parse(response.body)
 
       first_selected_name = selected.first["first_name"]
       last_selected_name = selected.last["first_name"]
@@ -110,7 +110,7 @@ end
       create_customer(1, "Steve", "Marks")
 
       get :find_all, last_name: "marshall"
-      selected = JSON.parse(response.body)["customers"]
+      selected = JSON.parse(response.body)
 
       first_selected_name = selected.first["last_name"]
       last_selected_name = selected.last["last_name"]
@@ -132,7 +132,7 @@ describe "#invoices" do
       
       get :invoices, id: customer.id
 
-      customer_invoices = JSON.parse(response.body)["invoices"]
+      customer_invoices = JSON.parse(response.body)
 
       assert_response :success
       expect(customer_invoices.count).to eq(2)
@@ -151,7 +151,7 @@ describe "#transactions" do
       transaction = Transaction.last
       
       get :transactions, id: customer.id
-      customer_transactions = JSON.parse(response.body)["transactions"]
+      customer_transactions = JSON.parse(response.body)
 
       assert_response :success
       expect(customer_transactions.count).to eq(2)
@@ -174,7 +174,7 @@ describe "#favorite_merchant" do
       create_transaction(1, "credit_card_number", "success", invoice3.id)
       
       get :favorite_merchant, id: customer.id
-      favorite_merchant = JSON.parse(response.body)["favorite_merchant"]
+      favorite_merchant = JSON.parse(response.body)
 
       assert_response :success
       expect(favorite_merchant.to_s).to include("Inspector Gadget")

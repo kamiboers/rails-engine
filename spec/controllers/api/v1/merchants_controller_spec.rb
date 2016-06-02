@@ -65,7 +65,7 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
       create_merchant(2, "Steve McSteve")
 
       get :find_all, name: "Steve McSteve"
-      selected = JSON.parse(response.body)["merchants"]
+      selected = JSON.parse(response.body)
 
       first_selected_name = selected.first["name"]
       last_selected_name = selected.last["name"]
@@ -82,7 +82,7 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
       create_merchant(1, "Blue")
 
       get :find_all, name: "steve"
-      selected = JSON.parse(response.body)["merchants"]
+      selected = JSON.parse(response.body)
 
       assert_response :success
       expect(selected.count).to eq(2)
@@ -98,7 +98,7 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
 
       get :items, id: merchant.id
 
-      merchant_items = JSON.parse(response.body)["items"]
+      merchant_items = JSON.parse(response.body)
 
       assert_response :success
       expect(merchant_items.count).to eq(2)
@@ -115,7 +115,7 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
 
       get :invoices, id: merchant.id
 
-      merchant_invoices = JSON.parse(response.body)["invoices"]
+      merchant_invoices = JSON.parse(response.body)
 
       assert_response :success
       expect(merchant_invoices.count).to eq(2)
@@ -136,7 +136,7 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
       allow(first_ranked).to receive(:sales).and_return(20)
 
       get :most_revenue, quantity: 3
-      top_three = JSON.parse(response.body)["top_merchants"]
+      top_three = JSON.parse(response.body)
 
       expect(top_three.to_s).to include("First Ranked")
       expect(top_three.to_s).to include("Second Ranked")
@@ -158,7 +158,7 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
       allow(first_ranked).to receive(:item_count).and_return(20)
 
       get :most_items, quantity: 3
-      top_three = JSON.parse(response.body)["top_merchants"]
+      top_three = JSON.parse(response.body)
 
 
       expect(top_three.to_s).to include("First Ranked")
@@ -173,20 +173,21 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
       merchant1 = create_merchant
       merchant2 = create_merchant
       invoice1 = create_invoice(1, "shipped", 1, merchant1.id)
-      create_invoice_item(1, 20, 20, 1, invoice1.id)
+      create_invoice_item(1, 2000, 20, 1, invoice1.id)
       create_transaction(1, "cc_number", "success", invoice1.id)  
 
       invoice2 = create_invoice(1, "shipped", 1, merchant2.id)
-      create_invoice_item(1, 30, 30, 1, invoice2.id)
+      create_invoice_item(1, 3000, 30, 1, invoice2.id)
       create_transaction(1, "cc_number", "success", invoice2.id)
 
-      today_str = (Time.now.utc).strftime("%m/%d/%Y")
-      yesterday_str = ((Time.now - 1.day).utc).strftime("%m/%d/%Y")
+      date = "10/10/10".to_datetime
+      invoice1.update!(created_at: date)
+      invoice2.update!(created_at: date)
 
-      get :all_revenue, date: today_str
-      revenue_today = JSON.parse(response.body)["date_revenue"]
-      get :all_revenue, date: yesterday_str
-      revenue_yesterday = JSON.parse(response.body)["date_revenue"]
+      get :all_revenue, date: date
+      revenue_today = JSON.parse(response.body)["total_revenue"]
+      get :all_revenue, date: (date-1.day)
+      revenue_yesterday = JSON.parse(response.body)["total_revenue"]
 
       expect(revenue_today.to_f).to eq(1300)
       expect(revenue_yesterday.to_f).to eq(0)
@@ -198,10 +199,10 @@ describe "#revenue" do
   it "returns merchant total revenue" do
     merchant = create_merchant
     invoice1 = create_invoice(1, "shipped", 1, merchant.id)
-    create_invoice_item(1, 100, 2, 1, invoice1.id)
+    create_invoice_item(1, 10000, 2, 1, invoice1.id)
     create_transaction(1, "cc_number", "success", invoice1.id)  
     invoice2 = create_invoice(1, "shipped", 1, merchant.id)
-    create_invoice_item(1, 10, 8, 1, invoice2.id)
+    create_invoice_item(1, 1000, 8, 1, invoice2.id)
     create_transaction(1, "cc_number", "success", invoice2.id)
 
     get :revenue, id: merchant.id
@@ -213,16 +214,16 @@ describe "#revenue" do
   it "returns merchant revenue by date of transaction" do
     merchant = create_merchant
     invoice = create_invoice(1, "shipped", 1, merchant.id)
-    create_invoice_item(1, 300, 2, 1, invoice.id)
+    create_invoice_item(1, 30000, 2, 1, invoice.id)
     create_transaction(1, "cc_number", "success", invoice.id)
 
-    today_str = (Time.now.utc).strftime("%m/%d/%Y")
-    yesterday_str = ((Time.now - 1.day).utc).strftime("%m/%d/%Y")
+    date = "01/10/15".to_datetime
+    invoice.update!(created_at: date, updated_at: date)
 
-    get :revenue, id: merchant.id, date: today_str
+    get :revenue, id: merchant.id, date: date
     revenue_today = JSON.parse(response.body)["revenue"]
     
-    get :revenue, id: merchant.id, date: yesterday_str
+    get :revenue, id: merchant.id, date: (date-1.day)
     revenue_yesterday = JSON.parse(response.body)["revenue"]
 
     expect(revenue_today.to_f).to eq(600)
@@ -243,7 +244,7 @@ end
     create_transaction(1, "cc_number", "success", invoice3.id)
 
     get :favorite_customer, id: merchant.id
-    favorite_customer = JSON.parse(response.body)["favorite_customer"]
+    favorite_customer = JSON.parse(response.body)
     
     expect(favorite_customer.to_s).to include("Benedict Cumberbatch")
     expect(favorite_customer.to_s).to include(customer1.id.to_s)
@@ -263,7 +264,7 @@ end
     create_transaction(1, "cc_number", "success", invoice3.id)
 
     get :customers_with_pending_invoices, id: merchant.id
-    pending_customers = JSON.parse(response.body)["pending_customers"]
+    pending_customers = JSON.parse(response.body)
 
     expect(pending_customers.to_s).to include("Benedict Cumberbatch")
     expect(pending_customers.to_s).to include(customer1.id.to_s)
