@@ -35,4 +35,3 @@ class Transaction < ActiveRecord::Base
   end
 
 end
-# invoices.successful.joins(:invoice_items).sum("quantity * unit_price")

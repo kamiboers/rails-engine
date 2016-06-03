@@ -45,13 +45,8 @@ class Invoice < ActiveRecord::Base
     transactions.successful
   end
 
-  def self.paid
-    joins(:transactions).where(transactions: { result: "success" })
-  end
-
   def total
     successful ? invoice_items.sum("quantity * unit_price") : 0
   end
 
-# invoices.successful.joins(:invoice_items).sum("quantity * unit_price").to_f
 end

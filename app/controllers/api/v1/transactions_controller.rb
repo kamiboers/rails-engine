@@ -25,23 +25,5 @@ class Api::V1::TransactionsController < ApplicationController
     transaction = Transaction.find(params[:id])
     render :json => transaction.invoice
   end
- 
-  # def create
-  #   respond_with Transaction.create(item_params), location: nil
-  # end
-
-  # def update
-  #   respond_with Transaction.update(params[:id], item_params), location: nil
-  # end
-
-  # def destroy
-  #   respond_with Transaction.delete(params[:id])
-  # end
-
-  # private
-
-  # def item_params
-  #   params.require(:transaction).permit(:id, :invoice_id, :credit_card_number, :expiration, :result, :created_at, :updated_at)
-  # end
 
 end

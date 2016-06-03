@@ -40,11 +40,11 @@ class Item < ActiveRecord::Base
   end
 
   def revenue
-    raw_revenue = invoice_items.joins(invoice: :transactions).where(transactions: {result: "success"}).sum("quantity * unit_price")/100.0
+    invoice_items.successful.sum("quantity * unit_price")/100.0
   end
 
   def number_sold
-    invoice_items.joins(invoice: :transactions).where(transactions: {result: "success"}).sum(:quantity)
+    invoice_items.successful.sum(:quantity)
   end
 
   def best_day

@@ -23,8 +23,8 @@ RSpec.describe Invoice, type: :model do
     invoice1 = create_invoice
     transaction2 = create_transaction(1, "cc_number", "success", invoice1.id)
 
-    expect(Invoice.paid).to eq([Invoice.find(invoice1.id)])
-    expect(Invoice.paid.count).to eq(1)
+    expect(Invoice.successful).to eq([Invoice.find(invoice1.id)])
+    expect(Invoice.successful.count).to eq(1)
   end
 
   it "returns successful invoices from a group" do

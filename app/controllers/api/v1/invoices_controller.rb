@@ -46,22 +46,4 @@ class Api::V1::InvoicesController < ApplicationController
     render :json => invoice.customer
   end
 
-  # def create
-  #   respond_with Invoice.create(item_params), location: nil
-  # end
-
-  # def update
-  #   respond_with Invoice.update(params[:id], item_params), location: nil
-  # end
-
-  # def destroy
-  #   respond_with Invoice.delete(params[:id])
-  # end
-
-  # private
-
-  # def item_params
-  #   params.require(:invoice).permit(:id, :customer_id, :merchant_id, :status, :created_at, :updated_at)
-  # end
-
 end

@@ -31,7 +31,7 @@ class InvoiceItem < ActiveRecord::Base
     return where(updated_at: params[:updated_at].to_datetime) if params[:updated_at]
   end
 
-  def self.paid
+  def self.successful
     joins(invoice: :transactions).where(transactions: {result: "success"})
   end
 

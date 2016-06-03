@@ -51,8 +51,7 @@ class Merchant < ActiveRecord::Base
   end
 
   def favorite_customer
-    a = invoices.paid
-    a = a.each_with_object(Hash.new(0)) { |invoice,counts| counts[invoice.customer_id] += 1 }
+    a = invoices.successful.each_with_object(Hash.new(0)) { |invoice,counts| counts[invoice.customer_id] += 1 }
     a = a.sort_by {|k,v| v}.reverse
     Customer.find(a.first.first)
   end

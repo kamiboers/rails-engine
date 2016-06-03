@@ -27,8 +27,7 @@ class Customer < ActiveRecord::Base
   end
 
   def favorite_merchant
-    merchant_hash = invoices.paid.group_by { |i| i.merchant }
-    merchant_hash.sort_by {|k, v| v.count }.reverse.first.first
+    invoices.successful.group_by { |i| i.merchant }.sort_by {|k, v| v.count }.reverse.first.first
   end
 
 end

@@ -11,7 +11,7 @@ RSpec.describe InvoiceItem, type: :model do
     create_transaction(1, "cc_number", "success", invoice.id)
     create_invoice_item(1, 75, 2, 1, invoice.id)
 
-    expect(Invoice.paid).to eq([invoice])
+    expect(Invoice.successful).to eq([invoice])
   end
 
   it "returns paid or unpaid status of associated invoice" do
@@ -19,7 +19,7 @@ RSpec.describe InvoiceItem, type: :model do
     create_transaction(1, "cc_number", "failed", invoice.id)
     create_invoice_item(1, 75, 2, 1, invoice.id)
 
-    expect(Invoice.paid).to eq([])
+    expect(Invoice.successful).to eq([])
   end
 
    it "returns paid invoice_items from a group" do
@@ -31,7 +31,7 @@ RSpec.describe InvoiceItem, type: :model do
     transaction1 = create_transaction(1, "cc_number", "failed", invoice1.id)
     invoice_item1 = create_invoice_item(1, 60, 2, 1, invoice1.id)
 
-    expect(InvoiceItem.paid).to eq( [InvoiceItem.find(invoice_item.id)] )
-    expect(Invoice.paid.count).to eq(1)
+    expect(InvoiceItem.successful).to eq( [InvoiceItem.find(invoice_item.id)] )
+    expect(Invoice.successful.count).to eq(1)
   end
 end
