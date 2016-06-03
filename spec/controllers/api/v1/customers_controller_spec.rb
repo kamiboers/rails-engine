@@ -26,16 +26,19 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
 
   describe "#random" do
     it "successfully returns random customer in database" do
-        create_customer(8)
-        id_array = Customer.pluck(:id)
-        get :random, format: :json
-        customer1_id = JSON.parse(response.body)["id"]
-        get :random, format: :json
-        customer2_id = JSON.parse(response.body)["id"]
+        create_customer(10)
+      id_array = Customer.pluck(:id)
+      get :random, format: :json
+      id1 = JSON.parse(response.body)["id"]
+      get :random, format: :json
+      id2 = JSON.parse(response.body)["id"]
+      get :random, format: :json
+      id3 = JSON.parse(response.body)["id"]
+      unique_results = [id1, id2, id3].uniq.count
 
-        assert_response :success
-        expect(id_array).to include(customer1_id)
-        expect(customer1_id).not_to eq(customer2_id)
+      assert_response :success
+      expect(id_array).to include(id1)
+      expect(unique_results).not_to eq(1)
     end
   end
 
@@ -75,8 +78,7 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
     end
 
     it "returns customer with first_name in search parameters" do
-      create_customer
-      customer = Customer.first
+      customer = create_customer
 
       get :find, first_name: customer.first_name
       assert_response :success
@@ -84,8 +86,7 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
     end
 
     it "returns customer with last_name in search parameters" do
-      create_customer
-      customer = Customer.first
+      customer = create_customer
 
       get :find, last_name: customer.last_name
       assert_response :success
@@ -185,11 +186,9 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
 
   describe "#invoices" do
     it "successfully returns specific customer invoice data" do
-      create_customer(2)
-      customer = Customer.last
+      customer = create_customer(2)
       create_invoice
-      create_invoice(2, "paid", customer.id)
-      invoice = Invoice.last
+      invoice = create_invoice(2, "paid", customer.id)
 
       get :invoices, id: customer.id
 
@@ -203,13 +202,10 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
 
   describe "#transactions" do
     it "successfully returns specific customer transaction data" do
-      create_customer
-      customer = Customer.last
-      create_invoice(1, "paid", customer.id)
-      invoice = Invoice.last
+      customer = create_customer
+      invoice = create_invoice(1, "paid", customer.id)
       create_transaction(1, "credit_card_number", "transaction result", invoice.id)
-      create_transaction(1, "credit_card_number", "other result", invoice.id)
-      transaction = Transaction.last
+      transaction = create_transaction(1, "credit_card_number", "other result", invoice.id)
 
       get :transactions, id: customer.id
       customer_transactions = JSON.parse(response.body)
@@ -229,7 +225,6 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
       invoice1 = create_invoice(1, "paid", customer.id, merchant1.id)
       invoice2 = create_invoice(1, "paid", customer.id, merchant1.id)
       invoice3 = create_invoice(1, "paid", customer.id, merchant2.id)
-      invoice = Invoice.last
       create_transaction(1, "credit_card_number", "success", invoice1.id)
       create_transaction(1, "credit_card_number", "success", invoice2.id)
       create_transaction(1, "credit_card_number", "success", invoice3.id)
@@ -242,49 +237,4 @@ RSpec.describe Api::V1::CustomersController, type: :controller do
       expect(favorite_merchant.to_s).not_to include("Penny")
     end
   end
-
-
-# describe "#create" do
-#   it "successfully creates an customer" do
-#     assert_equal 0, Customer.count
-
-#     customer_params = { first_name: "MEGATRON"}
-#     post :create, customer: customer_params, format: :json
-#     customer = Customer.last
-
-#     assert_response :success
-#     assert_equal customer.first_name, customer_params[:first_name]
-#     assert_equal 1, Customer.count
-#   end
-# end
-
-# describe "#update" do
-#   it "successfully updates an customer" do
-#     create_customer
-#     id = Customer.first.id
-#     previous_name = Customer.first.first_name
-#     customer_params = { first_name: "NEW NAME" }
-
-#     put :update, id: id, customer: customer_params, format: :json
-#     customer = Customer.find_by(id: id)
-
-#     assert_response :success
-#     refute_equal previous_name, customer.first_name
-#     assert_equal "NEW NAME", customer.first_name
-#   end
-# end
-
-# describe "#destroy" do
-#   it "successfully deletes an customer" do
-#     create_customer
-#     assert_equal 1, Customer.count 
-#     customer = Customer.last
-#     delete :destroy, id: customer.id, format: :json
-
-#     assert_response :success
-#     refute Customer.find_by(id: customer.id)
-#     assert_equal 0, Customer.count
-#   end
-# end
-
 end

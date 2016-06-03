@@ -5,6 +5,14 @@ require File.expand_path('../config/application', __FILE__)
 
 Rails.application.load_tasks
 
+task :default => 'databases:fetch'
+task :default => 'databases:create_customers'
+task :default => 'databases:create_merchants'
+task :default => 'databases:create_items'
+task :default => 'databases:create_invoices'
+task :default => 'databases:create_invoice_items'
+task :default => 'databases:create_transactions'
+
 # Rake::Task["databases:fetch"].execute
 # Rake::Task["databases:create_customers"].execute
 # Rake::Task["databases:create_merchants"].execute

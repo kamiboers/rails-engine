@@ -26,23 +26,25 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
   describe "#random" do
     it "successfully returns random invoice in database" do
-      create_invoice(8)
+      create_invoice(10)
       id_array = Invoice.pluck(:id)
       get :random, format: :json
-      invoice1_id = JSON.parse(response.body)["id"]
+      id1 = JSON.parse(response.body)["id"]
       get :random, format: :json
-      invoice2_id = JSON.parse(response.body)["id"]
+      id2 = JSON.parse(response.body)["id"]
+      get :random, format: :json
+      id3 = JSON.parse(response.body)["id"]
+      unique_results = [id1, id2, id3].uniq.count
 
       assert_response :success
-      expect(id_array).to include(invoice1_id)
-      expect(invoice1_id).not_to eq(invoice2_id)
+      expect(id_array).to include(id1)
+      expect(unique_results).not_to eq(1)
     end
   end
 
   describe "#find" do
     it "returns invoice with id in search parameters" do
-      create_invoice
-      invoice = Invoice.first
+      invoice = create_invoice
 
       get :find, id: invoice.id
 
@@ -54,8 +56,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
     it "returns invoice with status in search parameters" do
       create_invoice(1, "paid")
-      create_invoice(1, "pending")
-      invoice = Invoice.last
+      invoice = create_invoice(1, "pending")
 
       get :find, status: "pending"
 
@@ -65,8 +66,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
     it "returns invoice with customer_id in search parameters" do
       create_invoice(1, "paid", 1)
-      create_invoice(1, "pending", 22)
-      invoice = Invoice.last
+      invoice = create_invoice(1, "pending", 22)
 
       get :find, customer_id: 22
 
@@ -76,8 +76,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
     it "returns invoice with merchant_id in search parameters" do
       create_invoice(1, "paid", 1, 1)
-      create_invoice(1, "pending", 1, 66)
-      invoice = Invoice.last
+      invoice = create_invoice(1, "pending", 1, 66)
 
       get :find, merchant_id: 66
 
@@ -198,9 +197,8 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
   describe "#transactions" do
     it "successfully returns specific invoice transaction data" do
-      create_invoice(2)
-      invoice1 = Invoice.first
-      invoice2 = Invoice.last
+      invoice1 = create_invoice
+      invoice2 = create_invoice
       create_transaction(1, "credit_card_number", "complete", invoice1.id)
       create_transaction(2, "credit_card_number", "pending", invoice2.id)
 
@@ -219,9 +217,8 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
   describe "#invoice_items" do
     it "successfully returns specific invoice invoice_item data" do
-      create_invoice(2)
-      invoice1 = Invoice.first
-      invoice2 = Invoice.last
+      invoice1 = create_invoice
+      invoice2 = create_invoice
       create_invoice_item(1, 1099, 2, 3, invoice1.id)
       create_invoice_item(2, 2077, 2, 3, invoice2.id)
 
@@ -240,12 +237,9 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
   describe "#items" do
     it "successfully returns specific invoice item data" do
-      create_invoice
-      invoice = Invoice.last
-      create_item(1, 1, "Invoice Item")
-      item1 = Item.last
-      create_item(1, 1, "Other Invoice Item")
-      item2 = Item.last
+      invoice = create_invoice
+      item1 = create_item(1, 1, "Invoice Item")
+      item2 = create_item(1, 1, "Other Invoice Item")
 
       create_invoice_item(1, 10000, 3, item1.id, invoice.id)
       create_invoice_item(1, 10000, 3, item2.id, invoice.id)
@@ -262,14 +256,10 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
   describe "#customer" do
     it "successfully returns specific invoice customer data" do
-      create_customer(1, "John")
-      create_customer(1, "Susan")
-      customer1 = Customer.first
-      customer2 = Customer.last
-      create_invoice(1, "paid", customer1.id)
-      create_invoice(1, "pending", customer2.id)
-      invoice1 = Invoice.first
-      invoice2 = Invoice.last
+      customer1 = create_customer(1, "John")
+      customer2 = create_customer(1, "Susan")
+      invoice1 = create_invoice(1, "paid", customer1.id)
+      invoice2 = create_invoice(1, "pending", customer2.id)
 
       get :customer, id: invoice1.id
       invoice1_customer = JSON.parse(response.body)
@@ -284,14 +274,10 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
 
   describe "#merchant" do
     it "successfully returns specific invoice merchant data" do
-      create_merchant(1, "MEGATRON")
-      create_merchant(1, "Captain Planet")
-      merchant1 = Merchant.first
-      merchant2 = Merchant.last
-      create_invoice(1, "paid", 1, merchant1.id)
-      create_invoice(1, "pending", 1, merchant2.id)
-      invoice1 = Invoice.first
-      invoice2 = Invoice.last
+      merchant1 = create_merchant(1, "MEGATRON")
+      merchant2 = create_merchant(1, "Captain Planet")
+      invoice1 = create_invoice(1, "paid", 1, merchant1.id)
+      invoice2 = create_invoice(1, "pending", 1, merchant2.id)
 
       get :merchant, id: invoice1.id
       invoice1_merchant = JSON.parse(response.body)
@@ -303,51 +289,4 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
       expect(invoice2_merchant.to_s).to include("Captain Planet")
     end
   end
-
-
-######################################################################
-
-# describe "#create" do
-#   it "successfully creates an invoice" do
-#     assert_equal 0, Invoice.count
-
-#     invoice_params = { status: "AMAZEBALLS" }
-#     post :create, invoice: invoice_params, format: :json
-#     invoice = Invoice.last
-
-#     assert_response :success
-#     assert_equal invoice.status, invoice_params[:status]
-#     assert_equal 1, Invoice.count
-#   end
-# end
-
-# describe "#update" do
-#   it "successfully updates an invoice" do
-#     create_invoice
-#     id = Invoice.first.id
-#     previous_status = Invoice.first.status
-#     invoice_params = { status: "ROCKIN' IT" }
-
-#     put :update, id: id, invoice: invoice_params, format: :json
-#     invoice = Invoice.find_by(id: id)
-
-#     assert_response :success
-#     refute_equal previous_status, invoice.status
-#     assert_equal "ROCKIN' IT", invoice.status
-#   end
-# end
-
-# describe "#destroy" do
-#   it "successfully deletes an invoice" do
-#     create_invoice
-#     assert_equal 1, Invoice.count 
-#     invoice = Invoice.last
-#     delete :destroy, id: invoice.id, format: :json
-
-#     assert_response :success
-#     refute Invoice.find_by(id: invoice.id)
-#     assert_equal 0, Invoice.count
-#   end
-# end
-
 end

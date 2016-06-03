@@ -3,12 +3,9 @@ require 'rails_helper'
 RSpec.describe Merchant, type: :model do
   it { should validate_presence_of :name }
 
-
   it "returns total sales for merchant" do
-    create_merchant
-    merchant = Merchant.first
-    create_invoice(1, "shipped", 1, merchant.id)
-    invoice = Invoice.first
+    merchant = create_merchant
+    invoice = create_invoice(1, "shipped", 1, merchant.id)
     create_invoice_item(1, 5000, 2, 1, invoice.id)
     create_invoice_item(1, 10000, 2, 1, invoice.id)
     create_transaction(1, "cc", "success", invoice.id)
@@ -17,10 +14,8 @@ RSpec.describe Merchant, type: :model do
   end
 
    it "returns zero total sales for merchant with no successful transactions" do
-    create_merchant
-    merchant = Merchant.first
-    create_invoice(1, "shipped", 1, merchant.id)
-    invoice = Invoice.first
+    merchant = create_merchant
+    invoice = create_invoice(1, "shipped", 1, merchant.id)
     create_invoice_item(1, 5000, 2, 1, invoice.id)
     create_invoice_item(1, 10000, 2, 1, invoice.id)
     create_transaction(1, "cc", "failed", invoice.id)
@@ -29,13 +24,10 @@ RSpec.describe Merchant, type: :model do
   end
 
   it "returns top merchants by sales revenue" do
-    create_merchant(2)
-    fourth_ranked = Merchant.first
-    third_ranked = Merchant.last 
-    create_merchant
-    second_ranked = Merchant.last
-    create_merchant
-    first_ranked = Merchant.last
+    fourth_ranked = create_merchant
+    third_ranked = create_merchant
+    second_ranked = create_merchant
+    first_ranked = create_merchant
 
     allow(fourth_ranked).to receive(:sales).and_return(05)
     allow(third_ranked).to receive(:sales).and_return(10)
@@ -50,13 +42,10 @@ RSpec.describe Merchant, type: :model do
   end
 
   it "returns top merchants by number of items" do
-    create_merchant(2)
-    fourth_ranked = Merchant.first
-    third_ranked = Merchant.last 
-    create_merchant
-    second_ranked = Merchant.last
-    create_merchant
-    first_ranked = Merchant.last
+    fourth_ranked = create_merchant
+    third_ranked = create_merchant 
+    second_ranked = create_merchant
+    first_ranked = create_merchant
 
     allow(fourth_ranked).to receive(:item_count).and_return(05)
     allow(third_ranked).to receive(:item_count).and_return(10)
