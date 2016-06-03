@@ -26,16 +26,19 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
 
   describe "#random" do
     it "successfully returns random merchant in database" do
-      create_merchant(8)
+      create_merchant(10)
       id_array = Merchant.pluck(:id)
       get :random, format: :json
-      merchant1_id = JSON.parse(response.body)["id"]
+      id1 = JSON.parse(response.body)["id"]
       get :random, format: :json
-      merchant2_id = JSON.parse(response.body)["id"]
+      id2 = JSON.parse(response.body)["id"]
+      get :random, format: :json
+      id3 = JSON.parse(response.body)["id"]
+      unique_results = [id1, id2, id3].uniq.count
 
       assert_response :success
-      expect(id_array).to include(merchant1_id)
-      expect(merchant1_id).not_to eq(merchant2_id)
+      expect(id_array).to include(id1)
+      expect(unique_results).not_to eq(1)
     end
   end
 
@@ -157,8 +160,7 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
     it "successfully returns specific merchant item data" do
       merchant = create_merchant
       create_item
-      create_item(2, merchant.id, "Merchant ##{merchant.id}'s Item")
-      item = Item.last
+      item = create_item(2, merchant.id, "Merchant ##{merchant.id}'s Item")
 
       get :items, id: merchant.id
 
@@ -174,8 +176,7 @@ RSpec.describe Api::V1::MerchantsController, type: :controller do
     it "successfully returns specific merchant invoice data" do
       merchant = create_merchant
       create_invoice
-      create_invoice(2, "paid", 1, merchant.id)
-      invoice = Invoice.last
+      invoice = create_invoice(2, "paid", 1, merchant.id)
 
       get :invoices, id: merchant.id
 
@@ -336,50 +337,4 @@ end
     expect(pending_customers.count).to eq(1)
     end
   end
-
-
-
-# describe "#create" do
-#   it "successfully creates an merchant" do
-#     assert_equal 0, Merchant.count
-
-#     merchant_params = { name: "MEGATRON"}
-#     post :create, merchant: merchant_params, format: :json
-#     merchant = Merchant.last
-
-#     assert_response :success
-#     assert_equal merchant.name, merchant_params[:name]
-#     assert_equal 1, Merchant.count
-#   end
-# end
-
-# describe "#update" do
-#   it "successfully updates an merchant" do
-#     create_merchant
-#     id = Merchant.first.id
-#     previous_name = Merchant.first.name
-#     merchant_params = { name: "NEW NAME" }
-
-#     put :update, id: id, merchant: merchant_params, format: :json
-#     merchant = Merchant.find_by(id: id)
-
-#     assert_response :success
-#     refute_equal previous_name, merchant.name
-#     assert_equal "NEW NAME", merchant.name
-#   end
-# end
-
-# describe "#destroy" do
-#   it "successfully deletes an merchant" do
-#     create_merchant
-#     assert_equal 1, Merchant.count 
-#     merchant = Merchant.last
-#     delete :destroy, id: merchant.id, format: :json
-
-#     assert_response :success
-#     refute Merchant.find_by(id: merchant.id)
-#     assert_equal 0, Merchant.count
-#   end
-# end
-
 end
